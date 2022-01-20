@@ -13,6 +13,9 @@ import java.io.PrintStream;
 import java.io.StringReader;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.ResourceAccessMode;
+import org.junit.jupiter.api.parallel.ResourceLock;
+import org.junit.jupiter.api.parallel.Resources;
 
 class AppTest {
   /*@Test void appHasAGreeting() {
@@ -51,6 +54,7 @@ class AppTest {
     assertEquals("Where would you like to put your ship?\n"+expected+"\n",bytes.toString());
   }
   @Test
+  @ResourceLock(value = Resources.SYSTEM_OUT,mode = ResourceAccessMode.READ_WRITE)
   void test_main() throws IOException {
     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
     PrintStream out = new PrintStream(bytes,true);
@@ -59,7 +63,7 @@ class AppTest {
     InputStream expectedStream = getClass().getClassLoader().getResourceAsStream("output.txt");
     assertNotNull(expectedStream);
     InputStream oldIn = System.in;
-    PrintStream oldOut = system.out;
+    PrintStream oldOut = System.out;
     try{
       System.setIn(input);
       System.setOut(out);
