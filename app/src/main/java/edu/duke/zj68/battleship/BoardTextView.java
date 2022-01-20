@@ -25,7 +25,7 @@ public class BoardTextView {
     }
   }
   /**
-   *This display the empty board of one's own
+   *This display the board with ships of one's own
    */
   public String displayMyOwnBoard() {
     String head = makeHeader();
@@ -57,14 +57,21 @@ public class BoardTextView {
    */
   String makeBody() {
     StringBuilder ans = new StringBuilder("");
-    for(int j = 0;j<toDisplay.getHeight();j++) {
-      int letterNum = 65 +j;  //asc ii for the first letter "A"
+    for(int i = 0;i<toDisplay.getHeight();i++) {
+      int letterNum = 65 +i;  //asc ii for the first letter "A"
       char letter = (char)letterNum;
       ans.append(letter);
-      ans.append("  ");
-      for (int i = 0; i < toDisplay.getWidth() - 1; i++) {
-        ans.append("|");
-        ans.append("  ");
+      for (int j = 0; j < toDisplay.getWidth() ; j++) {
+        Coordinate where = new Coordinate(i,j);
+        if (toDisplay.whatIsAt(where)==null) {
+          ans.append("  ");
+        }
+        else {
+          ans.append("s");
+        }
+        if (j!=toDisplay.getWidth()-1) {
+          ans.append("|");
+        }
       }
     ans.append(letter);
     ans.append("\n");

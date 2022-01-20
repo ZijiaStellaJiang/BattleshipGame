@@ -19,7 +19,7 @@ public class BattleShipBoardTest {
     assertThrows(IllegalArgumentException.class, () -> new BattleShipBoard<Character>(-8,20));
   }
 
-  /*private<T> void checkWhatIsAtBoard (BattleShipBoard<T> b, T[][] expected) {
+  /**private<T> void checkWhatIsAtBoard(BattleShipBoard<T> b, T[][] expected) {
     /**
      *this check for empty board
      
