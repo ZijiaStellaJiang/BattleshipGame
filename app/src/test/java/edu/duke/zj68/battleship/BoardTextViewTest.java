@@ -50,7 +50,7 @@ public class BoardTextViewTest {
     Board<Character> b1 = new BattleShipBoard<Character>(w, h);
     BoardTextView view = new BoardTextView(b1);
     for (Coordinate where : s) {
-      Ship<Character> ship = new BasicShip(where);
+      Ship<Character> ship = new RectangleShip<Character>(where,'s','*');
       b1.tryAddShip(ship);
     }
    assertEquals(expectedHeader,view.makeHeader());

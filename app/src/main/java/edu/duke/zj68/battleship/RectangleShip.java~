@@ -1,0 +1,11 @@
+package edu.duke.zj68.battleship;
+
+import java.util.HashSet;
+
+public class RectangleShip {
+  static HashSet<Coordinate> makeCoords (Coordinate upperLeft, int width, int height) {
+    int upLeftRow  = upperLeft.getRow();
+    int upLeftCol = upperLeft.getColumn();
+    
+  }
+}

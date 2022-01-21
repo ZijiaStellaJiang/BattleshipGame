@@ -42,8 +42,8 @@ public class BattleShipBoardTest {
     //Character[][] expected = {{null,'s'},{null,'s'},{null,null}};
     Coordinate c1 = new Coordinate(0,1);
     Coordinate c2 = new Coordinate(1,1);
-    Ship<Character> toAdd1 = new BasicShip(c1);
-     Ship<Character> toAdd2 = new BasicShip(c2);
+    Ship<Character> toAdd1 = new RectangleShip<Character>(c1,'s','*');
+     Ship<Character> toAdd2 = new RectangleShip<Character>(c2,'s','*');
      for (int i = 0; i<b1.getHeight(); i++) {
        for (int j = 0; j<b1.getWidth(); j++) {
          Coordinate c = new Coordinate(i, j);
