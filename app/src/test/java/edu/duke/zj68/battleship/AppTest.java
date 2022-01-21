@@ -50,7 +50,7 @@ class AppTest {
     Board<Character> b = new BattleShipBoard<Character>(2, 3);
     App app = new App(b, sr, ps);
     app.doOnePlacement();
-    String expected = "  0|1\n"+"A  |sA\n"+"B  |  B\n"+"C  |  C\n"+"  0|1\n";
+    String expected = "  0| 1\n"+"A  |s A\n"+"B  |  B\n"+"C  |  C\n"+"  0| 1\n";
     assertEquals("Where would you like to put your ship?\n"+expected+"\n",bytes.toString());
   }
   @Test

@@ -46,7 +46,7 @@ public class BoardTextView {
     for (int i = 0; i < toDisplay.getWidth(); i++) {
       ans.append(sep);
       ans.append(i);
-      sep = "|";
+      sep = "| ";
     }
     ans.append("\n");
     return ans.toString();
@@ -69,6 +69,7 @@ public class BoardTextView {
         }
         else {
           ans.append(displayInfo);
+          ans.append(" ");
         }
         if (j!=toDisplay.getWidth()-1) {
           ans.append("|");

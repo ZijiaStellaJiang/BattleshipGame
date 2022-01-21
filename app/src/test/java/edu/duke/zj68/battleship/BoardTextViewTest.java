@@ -19,7 +19,7 @@ public class BoardTextViewTest {
   public void test_display_empty_2by2() {
     Board<Character> b1 = new BattleShipBoard<Character>(2,2);
     BoardTextView view = new BoardTextView(b1);
-    String expectedHeader = "  0|1\n";
+    String expectedHeader = "  0| 1\n";
     String expectedBody = "A  |  A\n"+"B  |  B\n";
     assertEquals(expectedHeader,view.makeHeader());
     assertEquals(expectedBody, view.makeBody());
@@ -28,13 +28,13 @@ public class BoardTextViewTest {
   }
   @Test
   public void test_display_empty_3by2(){
-    String exHead = "  0|1|2\n";
+    String exHead = "  0| 1| 2\n";
     String exBody = "A  |  |  A\n"+"B  |  |  B\n";
     emptyBoardHelper(3,2,exHead,exBody);
   }
   @Test
   public void test_display_empty_3by5(){
-    String exHead = "  0|1|2\n";
+    String exHead = "  0| 1| 2\n";
     String exBody = "A  |  |  A\n"+"B  |  |  B\n"+"C  |  |  C\n"+"D  |  |  D\n"+"E  |  |  E\n";
     emptyBoardHelper(3,5,exHead,exBody);
   }
@@ -67,8 +67,8 @@ public class BoardTextViewTest {
     shipLocation.add(c1);
     shipLocation.add(c2);
     shipLocation.add(c3);
-    String exHead = "  0|1|2|3\n";
-    String exBody = "A  |s|  |  A\n"+"B  |  |  |sB\n"+"Cs|  |  |  C\n";
+    String exHead = "  0| 1| 2| 3\n";
+    String exBody = "A  |s |  |  A\n"+"B  |  |  |s B\n"+"Cs |  |  |  C\n";
     shipBoardHelper(4, 3, shipLocation, exHead, exBody);
   }
 
