@@ -6,9 +6,11 @@ public class BattleShipBoard<T> implements Board<T>{
   private final int width;
   private final int height;
   private final ArrayList<Ship<T> > myShips;
+  @Override
   public int getWidth (){
     return this.width;
   }
+  @Override
   public int getHeight(){
     return this.height;
   }
@@ -32,11 +34,12 @@ public class BattleShipBoard<T> implements Board<T>{
   /**
    *add the ship to the list and return true
    */
+  @Override
   public boolean tryAddShip(Ship<T> toAdd) {
     this.myShips.add(toAdd);
     return true;
   }
-
+  @Override
   public T whatIsAt(Coordinate where) {
     for (Ship<T> s:myShips) {
       if (s.occupiesCoordinates(where)) {

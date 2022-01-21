@@ -63,11 +63,12 @@ public class BoardTextView {
       ans.append(letter);
       for (int j = 0; j < toDisplay.getWidth() ; j++) {
         Coordinate where = new Coordinate(i,j);
-        if (toDisplay.whatIsAt(where)==null) {
+        Character displayInfo = toDisplay.whatIsAt(where);
+        if (displayInfo==null) {
           ans.append("  ");
         }
         else {
-          ans.append("s");
+          ans.append(displayInfo);
         }
         if (j!=toDisplay.getWidth()-1) {
           ans.append("|");
