@@ -16,7 +16,7 @@ public interface Ship<T> {
    */
   public boolean isSunk();
   /**
-   *make this ship recor that it has been hit at the given coordinate.
+   *make this ship record that it has been hit at the given coordinate.
    *@param where is the coordinate that were hit(must be part of the ship)
    *@throws illegalArgumentException if where is not part of the ship
    */

@@ -1,6 +1,8 @@
 package edu.duke.zj68.battleship;
 
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public abstract class  BasicShip<T> implements Ship<T> {
   /**
@@ -17,6 +19,12 @@ public abstract class  BasicShip<T> implements Ship<T> {
     }
   }
 
+  protected void checkCoordinateInThisShip(Coordinate c) {
+    if(occupiesCoordinates(c)==false) {
+      throw new IllegalArgumentException("This coordinate is not part of the ship");
+    }
+  }
+  
   @Override
   public boolean occupiesCoordinates(Coordinate where) {
     return myPieces.containsKey(where);
@@ -24,27 +32,30 @@ public abstract class  BasicShip<T> implements Ship<T> {
 
   @Override
   public boolean isSunk() {
-    // TODO Auto-generated method stub
-    return false;
+    Iterator<Coordinate> it = myPieces.keySet().iterator();
+    while(it.hasNext()) {
+      if (myPieces.get(it.next())==false) {
+        return false;
+      }
+    }
+    return true;
   }
 
   @Override
   public void recordHitAt(Coordinate where) {
-    // TODO Auto-generated method stub
-    
+    checkCoordinateInThisShip(where);
+    myPieces.replace(where, true);
   }
 
   @Override
   public boolean wasHitAt(Coordinate where) {
-    // TODO Auto-generated method stub
-    return false;
+    checkCoordinateInThisShip(where);
+    return myPieces.get(where);
   }
 
   @Override
   public T getDisplayInfoAt(Coordinate where) {
-    // TODO this is not right
-    //we need to look up the hit status of this coordinate
-    return myDisplayInfo.getInfo(where, false);
+    return myDisplayInfo.getInfo(where, wasHitAt(where));
   }
 
 }
