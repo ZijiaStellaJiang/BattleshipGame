@@ -2,7 +2,6 @@ package edu.duke.zj68.battleship;
 
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 
 public abstract class  BasicShip<T> implements Ship<T> {
   /**

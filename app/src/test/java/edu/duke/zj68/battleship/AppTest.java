@@ -44,13 +44,13 @@ class AppTest {
 
   @Test
   void test_do_one_placement() throws IOException {
-    StringReader sr = new StringReader("A1H\n");
+    StringReader sr = new StringReader("A1V\n");
     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
     PrintStream ps = new PrintStream(bytes,true);
     Board<Character> b = new BattleShipBoard<Character>(2, 3);
     App app = new App(b, sr, ps);
     app.doOnePlacement();
-    String expected = "  0| 1\n"+"A  |s A\n"+"B  |  B\n"+"C  |  C\n"+"  0| 1\n";
+    String expected = "  0| 1\n"+"A  |d A\n"+"B  |d B\n"+"C  |d C\n"+"  0| 1\n";
     assertEquals("Where would you like to put your ship?\n"+expected+"\n",bytes.toString());
   }
   @Test

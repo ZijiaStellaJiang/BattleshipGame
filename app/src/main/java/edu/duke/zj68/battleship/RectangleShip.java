@@ -19,13 +19,19 @@ public class RectangleShip<T> extends BasicShip<T>{
     }
     return shipCoordinates;
   }
-  public RectangleShip(Coordinate upperLeft, int width, int height,ShipDisplayInfo<T> displayInfo) {
-    super(makeCoords(upperLeft,width,height),displayInfo);
+  private final String name;
+  public RectangleShip(String name, Coordinate upperLeft, int width, int height,ShipDisplayInfo<T> myDisplayInfo) {
+    super(makeCoords(upperLeft,width,height),myDisplayInfo);
+    this.name = name;
   }
-  public RectangleShip(Coordinate upperLeft, int width, int height, T data, T onHit) {
-    this(upperLeft,width,height,new SimpleShipDisplayInfo<T>(data,onHit));
+  public RectangleShip(String name, Coordinate upperLeft, int width, int height, T data, T onHit) {
+    this(name, upperLeft,width,height,new SimpleShipDisplayInfo<T>(data,onHit));
   }
   public RectangleShip(Coordinate upperLeft, T data, T onHit) {
-    this(upperLeft,1,1,data,onHit);
+    this("testship",upperLeft,1,1,data,onHit);
+  }
+  @Override
+  public String getName() {
+    return this.name;
   }
 }

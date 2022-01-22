@@ -14,12 +14,14 @@ public class App {
   private final BoardTextView view;
   private final BufferedReader inputReader;
   private final PrintStream out;
+  private final AbstractShipFactory<Character> shipFactory;
 
   public App(Board<Character> theBoard,Reader inputSource,PrintStream out) {
     this.theBoard = theBoard;
     this.view = new BoardTextView(theBoard);
     this.inputReader = new BufferedReader(inputSource);
     this.out = out;
+    this.shipFactory = new V1ShipFactory();
   }
   public Placement readPlacement(String prompt) throws IOException {
     out.println(prompt);
@@ -28,7 +30,7 @@ public class App {
   }
   public void doOnePlacement() throws IOException {
     Placement toPlace = readPlacement("Where would you like to put your ship?");
-    Ship<Character> s = new RectangleShip<Character>(toPlace.getCoordinate(),'s','*');
+    Ship<Character> s = shipFactory.makeDestroyer(toPlace);
     theBoard.tryAddShip(s);
     out.println(view.displayMyOwnBoard());
   }

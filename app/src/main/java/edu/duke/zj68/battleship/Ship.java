@@ -35,4 +35,9 @@ public interface Ship<T> {
    *@return the view-specific information at that coordinate
    */
   public T getDisplayInfoAt(Coordinate where);
+  /**
+   *get the name of this ship, such as "submarine"
+   *@return the name of this ship
+   */
+  public String getName();
 }
