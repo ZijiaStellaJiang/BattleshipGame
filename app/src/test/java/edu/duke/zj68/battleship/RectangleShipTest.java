@@ -66,4 +66,15 @@ public class RectangleShipTest {
      assertEquals('*',s.getDisplayInfoAt(hit));
      assertEquals("h3ship",s.getName());
   }
+  @Test
+  public void test_get_coordinates() {
+    V1ShipFactory f1 = new V1ShipFactory();
+    Placement v1_2 = new Placement(new Coordinate(1,2), 'V');
+    Ship<Character> dst = f1.makeDestroyer(v1_2);
+    Iterable<Coordinate> dstCoors = dst.getCoordinates();
+    for(Coordinate c: dstCoors) {
+      assertEquals(true,dst.occupiesCoordinates(c));
+    }
+    
+  }
 }

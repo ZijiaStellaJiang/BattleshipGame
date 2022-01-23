@@ -2,6 +2,7 @@ package edu.duke.zj68.battleship;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Set;
 
 public abstract class  BasicShip<T> implements Ship<T> {
   /**
@@ -31,9 +32,9 @@ public abstract class  BasicShip<T> implements Ship<T> {
 
   @Override
   public boolean isSunk() {
-    Iterator<Coordinate> it = myPieces.keySet().iterator();
-    while(it.hasNext()) {
-      if (myPieces.get(it.next())==false) {
+    Set<Coordinate> keySet = myPieces.keySet();
+    for(Coordinate c:keySet) {
+      if(myPieces.get(c)==false) {
         return false;
       }
     }
@@ -57,4 +58,8 @@ public abstract class  BasicShip<T> implements Ship<T> {
     return myDisplayInfo.getInfo(where, wasHitAt(where));
   }
 
+  @Override
+  public Iterable<Coordinate> getCoordinates() {
+    return myPieces.keySet();
+  }
 }
