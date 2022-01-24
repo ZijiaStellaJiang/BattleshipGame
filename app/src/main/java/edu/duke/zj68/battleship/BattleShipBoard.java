@@ -33,16 +33,20 @@ public class BattleShipBoard<T> implements Board<T>{
     this.placementChecker = placementChecker;
   }
   public BattleShipBoard(int w, int h) {
-    this(w, h, new InBoundsRuleChecker<T>(null));
+    this(w, h, new InBoundsRuleChecker<T>(new NoCollisionRuleChecker<T>(null)));
   }
 
   /**
-   *add the ship to the list and return true
+   *try to add the ship to the list
+   *@return true if placement valid, otherwise false
    */
   @Override
   public boolean tryAddShip(Ship<T> toAdd) {
-    this.myShips.add(toAdd);
-    return true;
+    if(placementChecker.checkPlacement(toAdd, this)==true) {
+      this.myShips.add(toAdd);
+      return true;
+    }
+    return false;
   }
   @Override
   public T whatIsAt(Coordinate where) {
