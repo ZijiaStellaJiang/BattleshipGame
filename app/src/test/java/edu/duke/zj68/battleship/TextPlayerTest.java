@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.io.StringReader;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 public class TextPlayerTest {
@@ -51,6 +52,39 @@ public class TextPlayerTest {
     String expected = "  0| 1\n"+"A  |d A\n"+"B  |d B\n"+"C  |d C\n"+"  0| 1\n";
     assertEquals("Player A where do you want to place a Destroyer?\n"+expected+"\n",bytes.toString());
   }
+  @Test
+  public void test_doOnePlacement_tryAdd_error() throws IOException {
+    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+    TextPlayer player = createTextPlayer(2, 3, "A1H\nA1V\n", bytes);
+    player.doOnePlacement("Destroyer", player.shipCreationFns.get("Destroyer"));
+    String prompt = "Player A where do you want to place a Destroyer?\n";
+    String errMessage = "That placement is invalid: the ship goes off the right of the board.";
+    String expected = "  0| 1\n"+"A  |d A\n"+"B  |d B\n"+"C  |d C\n"+"  0| 1\n";
+    assertEquals(prompt+errMessage+"\n"+prompt+expected+"\n",bytes.toString());
+  }
+  @Test
+  public void test_doOnePlacement_placeConstruct_error() throws IOException {
+    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+    TextPlayer player = createTextPlayer(2, 3, "89V\nA1V\n", bytes);
+    player.doOnePlacement("Destroyer", player.shipCreationFns.get("Destroyer"));
+    String prompt = "Player A where do you want to place a Destroyer?\n";
+    String errMessage1 = "Coordinate row must be among A to Z, but is 8\n";
+    //String errMessage2 = "Empty input\n";
+    String expected = "  0| 1\n"+"A  |d A\n"+"B  |d B\n"+"C  |d C\n"+"  0| 1\n";
+    assertEquals(prompt+errMessage1+prompt+expected+"\n",bytes.toString());
+  }
+  /**
+  @Test
+  public void test_doOnePlacement_empty_error() throws IOException {
+    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+    TextPlayer player = createTextPlayer(2, 3, ""+"\n"+"A1V\n", bytes);
+    player.doOnePlacement("Destroyer", player.shipCreationFns.get("Destroyer"));
+    String prompt = "Player A where do you want to place a Destroyer?\n";
+    String errMessage = "Empty input\n";
+    String expected = "  0| 1\n"+"A  |d A\n"+"B  |d B\n"+"C  |d C\n"+"  0| 1\n";
+    assertEquals(prompt+errMessage+prompt+expected+"\n",bytes.toString());
+  }
+  */
   /*
   @Disabled
   @Test

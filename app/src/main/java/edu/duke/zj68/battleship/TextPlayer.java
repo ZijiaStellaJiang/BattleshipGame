@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -53,10 +52,27 @@ public class TextPlayer {
     return new Placement(s);
   }
   public void doOnePlacement(String shipName, Function<Placement,Ship<Character> > createFn) throws IOException {
-    Placement toPlace = readPlacement("Player "+name+" where do you want to place a "+shipName+"?");
-    Ship<Character> s = createFn.apply(toPlace);//shipFactory.makeDestroyer(toPlace);
-    theBoard.tryAddShip(s);
-    out.println(view.displayMyOwnBoard());
+    try {
+      Placement toPlace = readPlacement("Player "+name+" where do you want to place a "+shipName+"?");
+      Ship<Character> s = createFn.apply(toPlace);
+      //if placement invalid and unable to make a ship, keep asking to read placement
+      while(theBoard.tryAddShip(s)!= null) {
+        out.println(theBoard.tryAddShip(s));
+        toPlace = readPlacement("Player "+name+" where do you want to place a "+shipName+"?");
+        s= createFn.apply(toPlace);
+      }
+      out.println(view.displayMyOwnBoard());
+    }
+    catch (IllegalArgumentException e) {
+      out.println(e.getMessage());
+      doOnePlacement(shipName, createFn);
+    }
+    /**
+       catch (EOFException e) {
+      out.println(e.getMessage());
+      doOnePlacement(shipName, createFn);
+    }
+    */
   }
   public void doPlacementPhase() throws IOException {
     out.println(view.displayMyOwnBoard());

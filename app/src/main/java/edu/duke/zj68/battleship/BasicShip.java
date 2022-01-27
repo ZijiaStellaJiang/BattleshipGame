@@ -4,27 +4,29 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
 
-public abstract class  BasicShip<T> implements Ship<T> {
+public abstract class BasicShip<T> implements Ship<T> {
   /**
-   *contains mapping from the ship's coordinates to whether this coordinate is hit
-   *true if hit, false if not been hit, null if the ship does't contain the coordinate
+   * contains mapping from the ship's coordinates to whether this coordinate is
+   * hit true if hit, false if not been hit, null if the ship does't contain the
+   * coordinate
    */
-  protected HashMap<Coordinate,Boolean> myPieces;
+  protected HashMap<Coordinate, Boolean> myPieces;
   protected ShipDisplayInfo<T> myDisplayInfo;
-  public BasicShip(Iterable<Coordinate> where, ShipDisplayInfo<T> myDisplayInfo){
+
+  public BasicShip(Iterable<Coordinate> where, ShipDisplayInfo<T> myDisplayInfo) {
     this.myDisplayInfo = myDisplayInfo;
-    myPieces = new HashMap<Coordinate,Boolean>();
-    for (Coordinate c:where) {
+    myPieces = new HashMap<Coordinate, Boolean>();
+    for (Coordinate c : where) {
       myPieces.put(c, false);
     }
   }
 
   protected void checkCoordinateInThisShip(Coordinate c) {
-    if(occupiesCoordinates(c)==false) {
+    if (occupiesCoordinates(c) == false) {
       throw new IllegalArgumentException("This coordinate is not part of the ship");
     }
   }
-  
+
   @Override
   public boolean occupiesCoordinates(Coordinate where) {
     return myPieces.containsKey(where);
@@ -33,8 +35,8 @@ public abstract class  BasicShip<T> implements Ship<T> {
   @Override
   public boolean isSunk() {
     Set<Coordinate> keySet = myPieces.keySet();
-    for(Coordinate c:keySet) {
-      if(myPieces.get(c)==false) {
+    for (Coordinate c : keySet) {
+      if (myPieces.get(c) == false) {
         return false;
       }
     }
