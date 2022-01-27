@@ -23,7 +23,6 @@ class AppTest {
         App classUnderTest = new App();
         assertNotNull(classUnderTest.getGreeting(), "app should have a greeting");
         }*/
-
   @Test
   @ResourceLock(value = Resources.SYSTEM_OUT,mode = ResourceAccessMode.READ_WRITE)
   void test_main() throws IOException {

@@ -38,15 +38,17 @@ public class BattleShipBoard<T> implements Board<T>{
 
   /**
    *try to add the ship to the list
-   *@return true if placement valid, otherwise false
+   *@return null if placement valid, 
+   *otherwise a string that describe what is wrong
    */
   @Override
-  public boolean tryAddShip(Ship<T> toAdd) {
-    if(placementChecker.checkPlacement(toAdd, this)==true) {
+  public String tryAddShip(Ship<T> toAdd) {
+    //String placementProblem = placementChecker.checkPlacement(toAdd, this);
+    if (placementChecker.checkPlacement(toAdd, this)==null) {
       this.myShips.add(toAdd);
-      return true;
+      return null;
     }
-    return false;
+    return placementChecker.checkPlacement(toAdd, this);
   }
   @Override
   public T whatIsAt(Coordinate where) {

@@ -30,7 +30,7 @@ public class Placement {
     this.where = new Coordinate(coorStr);
     char oriLetter = upper.charAt(2);
     if(oriLetter != 'V' && oriLetter != 'H') {
-      throw new IllegalArgumentException ("Placement orientation shoulb be Vertical(V) of Horizontal(H), but it "+oriLetter);
+      throw new IllegalArgumentException ("Placement orientation should be Vertical(V) of Horizontal(H), but it "+oriLetter);
     }
     this.orientation = oriLetter;
   }

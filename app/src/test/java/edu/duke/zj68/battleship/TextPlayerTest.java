@@ -1,15 +1,15 @@
 package edu.duke.zj68.battleship;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.BufferedReader;
+import java.io.EOFException;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.StringReader;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 public class TextPlayerTest {
@@ -35,6 +35,13 @@ public class TextPlayerTest {
       assertEquals(prompt+"\n",bytes.toString());
       bytes.reset();
     }
+  }
+  @Test
+  public void test_input_null() throws IOException {
+    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+    TextPlayer player = createTextPlayer(10,20, "", bytes);
+    String prompt = "Please enter a location for a ship:";
+    assertThrows(EOFException.class, () -> player.readPlacement(prompt));
   }
   @Test
   public void test_do_one_placement() throws IOException {

@@ -16,10 +16,10 @@ public class NoCollisionRuleCheckerTest {
     b1.tryAddShip(sub1);
     V1ShipFactory f2 = new V1ShipFactory();
     Ship<Character> dst_collide = f2.makeDestroyer(new Placement(new Coordinate("a1"), 'V'));
-    assertEquals(false, noCoChecker1.checkPlacement(dst_collide, b1));
+    assertEquals("That placement is invalid: the ship overlaps another ship.", noCoChecker1.checkPlacement(dst_collide, b1));
     V1ShipFactory f3 = new V1ShipFactory();
     Ship<Character> dst = f3.makeDestroyer(new Placement(new Coordinate(1,0), 'H'));
-    assertEquals(true, noCoChecker1.checkPlacement(dst, b1));
+    assertEquals(null, noCoChecker1.checkPlacement(dst, b1));
   }
   @Test
   public void test_inBound_noCollide_combineChecker() {
@@ -31,12 +31,15 @@ public class NoCollisionRuleCheckerTest {
     b1.tryAddShip(sub1);
     V1ShipFactory f2 = new V1ShipFactory();
     Ship<Character> dst = f2.makeDestroyer(new Placement(new Coordinate("a0"), 'h'));
-    assertEquals(true, inBChecker1.checkPlacement(dst, b1));
+    assertEquals(null, inBChecker1.checkPlacement(dst, b1));
     V1ShipFactory f3 = new V1ShipFactory();
     Ship<Character> sub2 = f3.makeSubmarine(new Placement(new Coordinate(0,1), 'v'));
-    assertEquals(true, inBChecker1.checkPlacement(sub2,b1));
+    assertEquals(null, inBChecker1.checkPlacement(sub2,b1));
     b1.tryAddShip(dst);
-    assertEquals(false, inBChecker1.checkPlacement(sub2,b1));
+    assertEquals("That placement is invalid: the ship overlaps another ship.", inBChecker1.checkPlacement(sub2,b1));
+    V1ShipFactory f4 = new V1ShipFactory();
+    Ship<Character> car = f4.makeCarrier(new Placement(new Coordinate(2,-1),'h'));
+    assertEquals("That placement is invalid: the ship goes off the left of the board.",inBChecker1.checkPlacement(car, b1)); 
   }
 
 }

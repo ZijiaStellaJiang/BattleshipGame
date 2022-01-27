@@ -50,8 +50,8 @@ public class BattleShipBoardTest {
          assertEquals(null,b1.whatIsAt(c));
        }
      }
-    assertEquals(true,b1.tryAddShip(toAdd1));
-    assertEquals(true,b1.tryAddShip(toAdd2));
+    assertEquals(null,b1.tryAddShip(toAdd1));
+    assertEquals(null,b1.tryAddShip(toAdd2));
     assertEquals('s',b1.whatIsAt(c1));
     assertEquals('s',b1.whatIsAt(c2));
   }
@@ -60,18 +60,18 @@ public class BattleShipBoardTest {
     BattleShipBoard b1 = new BattleShipBoard<>(4, 4);
     V1ShipFactory f1 = new V1ShipFactory();
     Ship<Character> sub1 = f1.makeSubmarine(new Placement(new Coordinate("C1"), 'v'));
-    assertEquals(true,b1.tryAddShip(sub1));
+    assertEquals(null,b1.tryAddShip(sub1));
     V1ShipFactory f2 = new V1ShipFactory();
     Ship<Character> dst1 = f2.makeDestroyer(new Placement(new Coordinate("A0"), 'H'));
-    assertEquals(true, b1.tryAddShip(dst1));
+    assertEquals(null, b1.tryAddShip(dst1));
     V1ShipFactory f3 = new V1ShipFactory();
     Ship<Character> Bats1_collide = f3.makeBattleship(new Placement(new Coordinate("A2"), 'v'));
-    assertEquals(false, b1.tryAddShip(Bats1_collide));
+    assertEquals("That placement is invalid: the ship overlaps another ship.", b1.tryAddShip(Bats1_collide));
     V1ShipFactory f4 = new V1ShipFactory();
     Ship<Character> Car1_outBound = f4.makeCarrier(new Placement(new Coordinate("C3"), 'v'));
-    assertEquals(false, b1.tryAddShip(Car1_outBound));
+    assertEquals("That placement is invalid: the ship goes off the bottom of the board.", b1.tryAddShip(Car1_outBound));
     V1ShipFactory f5 = new V1ShipFactory();
     Ship<Character> sub2 = f1.makeSubmarine(new Placement(new Coordinate("C2"), 'h'));
-    assertEquals(true,b1.tryAddShip(sub2));
+    assertEquals(null ,b1.tryAddShip(sub2));
   }
 }
