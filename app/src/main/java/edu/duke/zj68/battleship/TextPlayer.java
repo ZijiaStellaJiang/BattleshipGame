@@ -10,14 +10,15 @@ import java.util.HashMap;
 import java.util.function.Function;
 
 public class TextPlayer {
-  private final String name;
-  private final Board<Character> theBoard;
-  private final BoardTextView view;
-  private final BufferedReader inputReader;
-  private final PrintStream out;
-  private final AbstractShipFactory<Character> shipFactory;
+  final String name;
+  final Board<Character> theBoard;
+  final BoardTextView view;
+  final BufferedReader inputReader;
+  final PrintStream out;
+  final AbstractShipFactory<Character> shipFactory;
   final ArrayList<String> shipsToPlace;
   final HashMap<String, Function<Placement, Ship<Character> > > shipCreationFns;
+  final HashMap<Character,String> shipNames;
 
   protected void setupShipCreationMap() {
     shipCreationFns.put("Submarine", (p) -> shipFactory.makeSubmarine(p));
@@ -31,6 +32,12 @@ public class TextPlayer {
     shipsToPlace.addAll(Collections.nCopies(3, "Battleship"));
     shipsToPlace.addAll(Collections.nCopies(2, "Carrier"));
   }
+  protected void setupShipName() {
+    shipNames.put('s', "Submarine");
+    shipNames.put('d',"Destroyer");
+    shipNames.put('c',"Carrier");
+    shipNames.put('b',"Battleship");
+  }
   public TextPlayer(String name, Board<Character> b, BufferedReader inputReader, PrintStream out, V1ShipFactory f) {
     this.name = name;
     this.theBoard = b;
@@ -42,6 +49,8 @@ public class TextPlayer {
     setupShipCreationList();
     this.shipCreationFns = new HashMap<String, Function<Placement,Ship<Character> > >();
     setupShipCreationMap();
+    this.shipNames = new HashMap<>();
+    setupShipName();
   }
   public Placement readPlacement(String prompt) throws IOException {
     out.println(prompt);
@@ -67,12 +76,6 @@ public class TextPlayer {
       out.println(e.getMessage());
       doOnePlacement(shipName, createFn);
     }
-    /**
-       catch (EOFException e) {
-      out.println(e.getMessage());
-      doOnePlacement(shipName, createFn);
-    }
-    */
   }
   public void doPlacementPhase() throws IOException {
     out.println(view.displayMyOwnBoard());
@@ -80,6 +83,33 @@ public class TextPlayer {
     out.println(promptInstruction);
     for (String name : shipsToPlace) {
       doOnePlacement(name, shipCreationFns.get(name));
+    }
+  }
+  public Coordinate readCoordinate(String prompt) throws IOException {
+    out.println(prompt);
+    String s= inputReader.readLine();
+    if(s==null) {
+      throw new EOFException("Empty input");
+    }
+    return new Coordinate(s);
+  }
+  public void playOneTurn(Board<Character> enemy,BoardTextView enemyView,String enemyName) throws IOException {
+    out.println(view.displayMyBoardWithEnemyNextToIt(enemyView, "Your Ocean", "Player "+enemyName+"'s Ocean"));
+    try {
+      Coordinate toFire = readCoordinate("Player "+name+" which coordinate do you want to fire at?");
+      Ship<Character> fire = enemy.fireAt(toFire);
+      if(fire==null) {
+        out.println("You missed!");
+      }
+      else {
+        Character info = fire.getDisplayInfoAt(toFire, false);
+        String shipName = shipNames.get(info);
+        out.println("You hit a "+shipName+"!");
+      }
+    }
+    catch (IllegalArgumentException e) {
+      out.println(e.getMessage());
+      playOneTurn(enemy, enemyView, enemyName);
     }
   }
 }

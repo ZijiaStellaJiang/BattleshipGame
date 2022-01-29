@@ -69,21 +69,78 @@ public class TextPlayerTest {
     player.doOnePlacement("Destroyer", player.shipCreationFns.get("Destroyer"));
     String prompt = "Player A where do you want to place a Destroyer?\n";
     String errMessage1 = "Coordinate row must be among A to Z, but is 8\n";
-    //String errMessage2 = "Empty input\n";
     String expected = "  0| 1\n"+"A  |d A\n"+"B  |d B\n"+"C  |d C\n"+"  0| 1\n";
     assertEquals(prompt+errMessage1+prompt+expected+"\n",bytes.toString());
   }
-  /*
-  @Disabled
   @Test
-  public void test_do_one_placemene_phase() throws IOException {
+  public void test_read_coordinate() throws IOException{
     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-    TextPlayer playerA = createTextPlayer(2,3,"A1V\n", bytes);
-    playerA.doPlacementPhase();
-    String empty = "  0| 1\n"+"A  |  A\n"+"B  |  B\n"+"C  |  C\n"+"  0| 1\n";
-    String expected = "  0| 1\n"+"A  |d A\n"+"B  |d B\n"+"C  |d C\n"+"  0| 1\n";
-    assertEquals(empty+"\n"+"Player A: you are going to place the following ships (which are all rectangular). For each ship, type the coordinate of the upper left side of the ship, followed by either H (for horizontal) or V (for vertical). For example M4H would place a ship horizontally starting at M4 and going to the right. You have\n\n"+"2 'Submarine' ships that are 1x2\n3 'Destroyers' that are 1x3\n3 'Battleships' that are 1x4\n2 'Carriers' that are 1x6\n"+"\n"+"Player A where do you want to place a Destroyer?\n"+expected+"\n",bytes.toString());
+    TextPlayer player = createTextPlayer(10,20,"B2\nC8\na4\n",bytes);
+    String prompt = "Please enter a coordinate to fire at:";
+    Coordinate[] expected = new Coordinate[3];
+    expected[0] = new Coordinate(1,2);
+    expected[1] = new Coordinate(2,8);
+    expected[2] = new Coordinate(0,4);
+    for (int i=0 ; i<expected.length ; i++) {
+      Coordinate p = player.readCoordinate(prompt);
+      assertEquals(p,expected[i]);
+      assertEquals(prompt+"\n",bytes.toString());
+      bytes.reset();
+    } 
   }
-  */
+  @Test
+  public void test_input_coordinate_null() throws IOException {
+    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+    TextPlayer player = createTextPlayer(10,20, "", bytes);
+    String prompt = "Please enter a coordinate to fire at:";
+    assertThrows(EOFException.class, () -> player.readCoordinate(prompt));
+  }
+  @Test
+  public void test_play_one_turn() throws IOException {
+    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+    Board<Character> boardOwn = new BattleShipBoard<Character>(4, 3, 'X');
+    V1ShipFactory f1 = new V1ShipFactory();
+    Ship<Character> sub = f1.makeSubmarine(new Placement("B1v"));
+    boardOwn.tryAddShip(sub);
+    TextPlayer player = new TextPlayer("A", boardOwn, new BufferedReader(new StringReader("b3\na0\n")), new PrintStream(bytes,true), new V1ShipFactory());
+    Board<Character> ene = new BattleShipBoard<Character>(4, 3, 'X');
+    BoardTextView eneView = new BoardTextView(ene);
+    V1ShipFactory f2 = new V1ShipFactory();
+    Ship<Character> des=f2.makeDestroyer(new Placement("a3v"));
+    ene.tryAddShip(des);
+    player.playOneTurn(ene, eneView, "B");
+    String expected1 = "Your Ocean                     Player B's Ocean\n"+
+                                     "  0| 1| 2| 3                  0| 1| 2| 3\n" +
+                                     "A  |  |  |  A                A  |  |  |  A\n" +
+                                     "B  |s |  |  B                B  |  |  |  B\n" +
+                                     "C  |s |  |  C                C  |  |  |  C\n" +
+                                     "  0| 1| 2| 3                  0| 1| 2| 3\n";
+    //assertEquals(expected1+"\n"+"Player A which coordinate do you wan to fire at?\n"+"You hit a Destroyer!\n",bytes.toString());
+    player.playOneTurn(ene, eneView, "B");
+    String expected2 = "Your Ocean                     Player B's Ocean\n"+
+                                     "  0| 1| 2| 3                  0| 1| 2| 3\n" +
+                                     "A  |  |  |  A                A  |  |  |  A\n" +
+                                     "B  |s |  |  B                B  |  |  |d B\n" +
+                                     "C  |s |  |  C                C  |  |  |  C\n" +
+                                     "  0| 1| 2| 3                  0| 1| 2| 3\n";
+    assertEquals(expected1+"\n"+"Player A which coordinate do you want to fire at?\n"+"You hit a Destroyer!\n"+expected2+"\n"+"Player A which coordinate do you want to fire at?\n"+"You missed!\n",bytes.toString());
+  }
+  @Test
+  public void test_playOneTrun_errorInput() throws IOException{
+    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+    Board<Character> boardOwn = new BattleShipBoard<Character>(4, 3, 'X');
+    TextPlayer player = new TextPlayer("A", boardOwn, new BufferedReader(new StringReader("A:\na0\n")), new PrintStream(bytes,true), new V1ShipFactory());
+    Board<Character> ene = new BattleShipBoard<Character>(4, 3, 'X');
+    BoardTextView eneView = new BoardTextView(ene);
+    player.playOneTurn(ene, eneView, "B");
+    String prompt = "Player A which coordinate do you want to fire at?\n";
+    String expected1 = "Your Ocean                     Player B's Ocean\n"+
+                                     "  0| 1| 2| 3                  0| 1| 2| 3\n" +
+                                     "A  |  |  |  A                A  |  |  |  A\n" +
+                                     "B  |  |  |  B                B  |  |  |  B\n" +
+                                     "C  |  |  |  C                C  |  |  |  C\n" +
+                                     "  0| 1| 2| 3                  0| 1| 2| 3\n";
+    assertEquals(expected1+"\n"+prompt+"For input string: \":\""+"\n"+expected1+"\n"+prompt+"You missed!\n",bytes.toString());
+  }
 
 }
