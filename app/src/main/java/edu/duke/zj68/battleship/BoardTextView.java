@@ -44,6 +44,36 @@ public class BoardTextView {
   public String displayEnemyBoard() {
     return displayAnyBoard((c) -> toDisplay.whatIsAtForEnemy(c));
   }
+  /**
+   *display the enemy's board next to my own board
+   *left one is this.view.displaymyown
+   *right one is enemyview.displayenemy
+   *second board starts from 3*w+19 
+   *two board have 16 spaces between them
+   */
+  public String displayMyBoardWithEnemyNextToIt(BoardTextView enemyView, String myHeader, String enemyHeader) {
+    int w = toDisplay.getWidth();
+    String[] myViewLines = this.displayMyOwnBoard().split("\n");
+    String[] enemyViewLines = enemyView.displayEnemyBoard().split("\n");
+    StringBuilder bothBoard = new StringBuilder(myHeader);
+    int spaceLen = 3*w+19-myHeader.length();
+    for (int i = 0;i<spaceLen;i++) {
+      bothBoard.append(" ");
+    }
+    bothBoard.append(enemyHeader);
+    bothBoard.append("\n");
+    //bothBoard.append(myViewLines[0]);
+    //bothBoard.append("");
+    
+    int len = myViewLines.length;
+    for (int i = 0;i<len;i++) {
+      bothBoard.append(myViewLines[i]);
+      bothBoard.append("                ");
+      bothBoard.append(enemyViewLines[i]);
+      bothBoard.append("\n");
+    }
+    return bothBoard.toString();
+  }
 
   /**
    * This makes the header line, e.g. 0|1|2|3|4\n return the String that is the

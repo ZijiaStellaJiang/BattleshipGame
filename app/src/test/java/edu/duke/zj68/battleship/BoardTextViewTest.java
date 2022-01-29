@@ -93,5 +93,30 @@ public class BoardTextViewTest {
                                           "  0| 1| 2| 3\n" ;
     assertEquals(enemyView,view.displayEnemyBoard());
   }
+  @Test
+  public void test_display_own_with_enemy() {
+    Board<Character> b1 = new BattleShipBoard<Character>(4, 3, 'X');
+    Board<Character> b2 = new BattleShipBoard<Character>(4, 3, 'X');
+    BoardTextView view_own = new BoardTextView(b1);
+    BoardTextView view_enemy = new BoardTextView(b2);
+    V1ShipFactory f1= new V1ShipFactory();
+    Ship<Character> des = f1.makeDestroyer(new Placement(new Coordinate("A3"), 'v'));
+    b1.tryAddShip(des);
+    V1ShipFactory f2= new V1ShipFactory();
+    Ship<Character> sub = f2.makeSubmarine(new Placement(new Coordinate("B0"), 'h'));
+    b2.tryAddShip(sub);
+    Coordinate fire_own = new Coordinate("B3");
+    Coordinate fire_ene = new Coordinate(0,2);
+    b1.fireAt(fire_own);
+    b2.fireAt(fire_ene);
+    String expected ="Your Ocean                     Player B's Ocean\n"+
+                                     "  0| 1| 2| 3                  0| 1| 2| 3\n" +
+                                     "A  |  |  |d A                A  |  |X |  A\n" +
+                                     "B  |  |  |* B                B  |  |  |  B\n" +
+                                     "C  |  |  |d C                C  |  |  |  C\n" +
+                                     "  0| 1| 2| 3                  0| 1| 2| 3\n";
+    assertEquals(expected,view_own.displayMyBoardWithEnemyNextToIt(view_enemy, "Your Ocean", "Player B's Ocean"));
+    
+  }
 
 }
