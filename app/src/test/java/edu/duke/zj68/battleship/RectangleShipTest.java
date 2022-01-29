@@ -62,8 +62,10 @@ public class RectangleShipTest {
      RectangleShip<Character> s = new RectangleShip<Character>("h3ship",c, 1, 3, 's', '*');
      Coordinate hit = new Coordinate(2,0);
      s.recordHitAt(hit);
-     assertEquals('s',s.getDisplayInfoAt(c));
-     assertEquals('*',s.getDisplayInfoAt(hit));
+     assertEquals('s',s.getDisplayInfoAt(c,true));
+     assertEquals(null,s.getDisplayInfoAt(c, false));
+     assertEquals('*',s.getDisplayInfoAt(hit,true));
+     
      assertEquals("h3ship",s.getName());
   }
   @Test

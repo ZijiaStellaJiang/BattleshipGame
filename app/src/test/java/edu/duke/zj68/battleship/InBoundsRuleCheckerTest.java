@@ -8,7 +8,7 @@ public class InBoundsRuleCheckerTest {
   @Test
   public void test_inBounds_ruleChecker() {
     PlacementRuleChecker<Character> inBChecker1 = new InBoundsRuleChecker<Character>(null);
-    BattleShipBoard<Character> b1 = new BattleShipBoard<Character>(4, 3, inBChecker1);
+    BattleShipBoard<Character> b1 = new BattleShipBoard<Character>(4, 3, inBChecker1,'X');
     V1ShipFactory f1 = new V1ShipFactory();
     Ship<Character> dst1 = f1.makeDestroyer(new Placement(new Coordinate("A3"), 'V'));
     V1ShipFactory f2 = new V1ShipFactory();
@@ -16,7 +16,7 @@ public class InBoundsRuleCheckerTest {
     assertEquals(null,inBChecker1.checkPlacement(dst1, b1));
     assertEquals("That placement is invalid: the ship goes off the right of the board.",inBChecker1.checkPlacement(bats1, b1));
     PlacementRuleChecker<Character> inBChecker2 = new InBoundsRuleChecker<Character>(null);
-    BattleShipBoard<Character> b2 = new BattleShipBoard<>(6, 10,inBChecker2);
+    BattleShipBoard<Character> b2 = new BattleShipBoard<>(6, 10,inBChecker2,'X');
     V1ShipFactory f3 = new V1ShipFactory();
     Ship<Character> car1 = f3.makeCarrier(new Placement(new Coordinate(8,5), 'V'));
     assertEquals("That placement is invalid: the ship goes off the bottom of the board.",inBChecker2.checkPlacement(car1, b2));

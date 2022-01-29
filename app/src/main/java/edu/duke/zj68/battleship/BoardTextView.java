@@ -1,5 +1,7 @@
 package edu.duke.zj68.battleship;
 
+import java.util.function.Function;
+
 /**
  * This calss handles textual display of a Board(i.e. converting it to a string
  * to show to the use It supports two ways to display the Board: player's own
@@ -24,16 +26,23 @@ public class BoardTextView {
           "Board must be no larger than 10*26, but is " + toDisplay.getWidth() + "x" + toDisplay.getHeight());
     }
   }
+  
   /**
-   *This display the board with ships of one's own
+   *This display the board with ships of one's own of the one for enemy
    */
-  public String displayMyOwnBoard() {
+  protected String displayAnyBoard(Function<Coordinate,Character> getSquareFn) {
     String head = makeHeader();
-    String body = makeBody();
+    String body = makeBody(getSquareFn);
     StringBuilder display = new StringBuilder(head);
     display.append(body);
     display.append(head);
     return display.toString();
+  }
+  public String displayMyOwnBoard() {
+    return displayAnyBoard((c)-> toDisplay.whatIsAtForSelf(c));
+  }
+  public String displayEnemyBoard() {
+    return displayAnyBoard((c) -> toDisplay.whatIsAtForEnemy(c));
   }
 
   /**
@@ -55,7 +64,7 @@ public class BoardTextView {
   /**
    * This makes body line, e.g. A | A\n
    */
-  String makeBody() {
+  String makeBody(Function<Coordinate,Character> getSquareFn) {
     StringBuilder ans = new StringBuilder("");
     for(int i = 0;i<toDisplay.getHeight();i++) {
       int letterNum = 65 +i;  //asc ii for the first letter "A"
@@ -63,7 +72,7 @@ public class BoardTextView {
       ans.append(letter);
       for (int j = 0; j < toDisplay.getWidth() ; j++) {
         Coordinate where = new Coordinate(i,j);
-        Character displayInfo = toDisplay.whatIsAt(where);
+        Character displayInfo = getSquareFn.apply(where); //toDisplay.whatIsAtForSelf(where);
         if (displayInfo==null) {
           ans.append("  ");
         }

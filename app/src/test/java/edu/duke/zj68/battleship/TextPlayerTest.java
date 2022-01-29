@@ -17,7 +17,7 @@ public class TextPlayerTest {
   private TextPlayer createTextPlayer(int w,int h, String inputData, ByteArrayOutputStream bytes) {
     BufferedReader input = new BufferedReader(new StringReader(inputData));
     PrintStream output = new PrintStream(bytes,true);
-    Board<Character> board = new BattleShipBoard<Character>(w,h);
+    Board<Character> board = new BattleShipBoard<Character>(w,h,'X');
     V1ShipFactory shipFactory = new V1ShipFactory();
     return new TextPlayer("A",board,input,output,shipFactory);
   }
@@ -73,18 +73,6 @@ public class TextPlayerTest {
     String expected = "  0| 1\n"+"A  |d A\n"+"B  |d B\n"+"C  |d C\n"+"  0| 1\n";
     assertEquals(prompt+errMessage1+prompt+expected+"\n",bytes.toString());
   }
-  /**
-  @Test
-  public void test_doOnePlacement_empty_error() throws IOException {
-    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-    TextPlayer player = createTextPlayer(2, 3, ""+"\n"+"A1V\n", bytes);
-    player.doOnePlacement("Destroyer", player.shipCreationFns.get("Destroyer"));
-    String prompt = "Player A where do you want to place a Destroyer?\n";
-    String errMessage = "Empty input\n";
-    String expected = "  0| 1\n"+"A  |d A\n"+"B  |d B\n"+"C  |d C\n"+"  0| 1\n";
-    assertEquals(prompt+errMessage+prompt+expected+"\n",bytes.toString());
-  }
-  */
   /*
   @Disabled
   @Test

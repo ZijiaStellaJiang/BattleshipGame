@@ -9,7 +9,7 @@ public class V1ShipFactoryTest {
     assertEquals(expectedName, testShip.getName());
     for(Coordinate c:expectedLocs) {
       assertEquals(true,testShip.occupiesCoordinates(c));
-      assertEquals(expectedLetter,testShip.getDisplayInfoAt(c));
+      assertEquals(expectedLetter,testShip.getDisplayInfoAt(c,true));
     }
   }
   @Test
