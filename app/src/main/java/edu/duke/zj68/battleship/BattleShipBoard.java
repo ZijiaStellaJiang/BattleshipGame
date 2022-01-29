@@ -88,4 +88,14 @@ public class BattleShipBoard<T> implements Board<T>{
   public T whatIsAtForEnemy(Coordinate where) {
     return whatIsAt(where, false);
   }
+  @Override
+  public boolean checkLose() {
+    for (Ship<T> s : myShips) {
+      if (s.isSunk() == false) {
+        return false;
+      }
+    }
+    return true;
+  }
+  
 }
