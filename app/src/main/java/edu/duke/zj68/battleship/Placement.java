@@ -29,9 +29,11 @@ public class Placement {
     String coorStr = upper.substring(0,2);
     this.where = new Coordinate(coorStr);
     char oriLetter = upper.charAt(2);
+    /*
     if(oriLetter != 'V' && oriLetter != 'H') {
       throw new IllegalArgumentException ("Placement orientation should be Vertical(V) of Horizontal(H), but is "+oriLetter);
     }
+    */
     this.orientation = oriLetter;
   }
 
