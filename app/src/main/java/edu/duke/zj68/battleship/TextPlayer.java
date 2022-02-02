@@ -38,7 +38,7 @@ public class TextPlayer {
     shipNames.put('c',"Carrier");
     shipNames.put('b',"Battleship");
   }
-  public TextPlayer(String name, Board<Character> b, BufferedReader inputReader, PrintStream out, V1ShipFactory f) {
+  public TextPlayer(String name, Board<Character> b, BufferedReader inputReader, PrintStream out, /*V1ShipFactory*/ AbstractShipFactory<Character> f) {
     this.name = name;
     this.theBoard = b;
     this.view = new BoardTextView(b);
@@ -79,7 +79,7 @@ public class TextPlayer {
   }
   public void doPlacementPhase() throws IOException {
     out.println(view.displayMyOwnBoard());
-    String promptInstruction = "Player "+name+": you are going to place the following ships (which are all rectangular). For each ship, type the coordinate of the upper left side of the ship, followed by either H (for horizontal) or V (for vertical). For example M4H would place a ship horizontally starting at M4 and going to the right. You have\n\n"+"2 'Submarine' ships that are 1x2\n3 'Destroyers' that are 1x3\n3 'Battleships' that are 1x4\n2 'Carriers' that are 1x6\n";
+    String promptInstruction = "Player "+name+": you are going to place the following ships. For each ship, type the coordinate of the upper left side of the ship, followed by either H (for horizontal) or V (for vertical) or U (for up direction) or D (for down direction) or L (for left direction) or R (for right direction). For example M4H would place a ship horizontally starting at M4 and going to the right. You have\n\n"+"2 'Submarine' ships that are 1x2\n3 'Destroyers' that are 1x3\n3 'Battleships' that are 'T' shaped\n2 'Carriers' that are 'Z' shaped\n";
     out.println(promptInstruction);
     for (String name : shipsToPlace) {
       doOnePlacement(name, shipCreationFns.get(name));

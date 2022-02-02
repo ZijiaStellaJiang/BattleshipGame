@@ -1,0 +1,5 @@
+package edu.duke.zj68.battleship;
+
+public class V2ShipFactory implements AbstractShipFactory<Character> {
+
+}
