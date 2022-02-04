@@ -2,6 +2,8 @@ package edu.duke.zj68.battleship;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.HashSet;
+
 import org.junit.jupiter.api.Test;
 
 public class BattleShipBoardTest {
@@ -42,8 +44,8 @@ public class BattleShipBoardTest {
     //Character[][] expected = {{null,'s'},{null,'s'},{null,null}};
     Coordinate c1 = new Coordinate(0,1);
     Coordinate c2 = new Coordinate(1,1);
-    Ship<Character> toAdd1 = new RectangleShip<Character>(c1,'s','*');
-     Ship<Character> toAdd2 = new RectangleShip<Character>(c2,'s','*');
+    Ship<Character> toAdd1 = new RectangleShip<Character>(new Placement(c1, 'h'),'s','*');
+     Ship<Character> toAdd2 = new RectangleShip<Character>(new Placement(c2, 'h'),'s','*');
      for (int i = 0; i<b1.getHeight(); i++) {
        for (int j = 0; j<b1.getWidth(); j++) {  
        Coordinate c = new Coordinate(i, j);
@@ -123,4 +125,32 @@ public class BattleShipBoardTest {
     b1.fireAt(new Coordinate("b1"));
     assertEquals(true,b1.checkLose());
   }
+  /*
+  @Test
+  public void test_remove_ship() {
+    Board<Character> b = new BattleShipBoard<Character>(4, 3,'X');
+    V2ShipFactory f1 = new V2ShipFactory();
+    Ship<Character> dst = f1.makeDestroyer(new Placement(new Coordinate("b0"), 'h'));
+    V2ShipFactory f2 = new V2ShipFactory();
+    Ship<Character> sub = f2.makeSubmarine(new Placement(new Coordinate("c0"),'v'));
+    b.tryAddShip(dst);
+    b.tryAddShip(sub);
+    b.fireAt(new Coordinate("b1"));
+    Coordinate expected = new Coordinate(1,1);
+    assertEquals(true, b.removeShip(dst).contains(expected));
+    assertEquals(true,b.removeShip(sub).isEmpty());
+    assertEquals(null,b.selectShip(expected));
+  }
+  
+  @Test
+  public void test_find_new_coordinate() {
+    Board<Character> b = new BattleShipBoard<>(4, 4,'X');
+    V2ShipFactory f1 = new V2ShipFactory();
+    Ship<Character> old = f1.makeDestroyer(new Placement("b0h"));
+    V2ShipFactory f2 = new V2ShipFactory();
+    Ship<Character> newShip = f2.makeDestroyer(new Placement("c1h"));
+    Coordinate hit = new  Coordinate("b1");
+    assertEquals(new Coordinate("c2"),b.findNewCoordinate(old, hit, newShip));
+  }
+  */
 }

@@ -11,7 +11,7 @@ public class V2ShipFactory implements AbstractShipFactory<Character> {
       w = h;
       h = temp;
     }
-    Ship<Character> created = new RectangleShip<Character>(name,where.getCoordinate(),w,h,letter,'*');
+    Ship<Character> created = new RectangleShip<Character>(name,where,w,h,letter,'*');
     return created;
   }
   protected void checkShapedShip(Placement where) {

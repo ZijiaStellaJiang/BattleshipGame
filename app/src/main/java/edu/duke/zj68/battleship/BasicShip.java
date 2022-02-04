@@ -6,21 +6,22 @@ import java.util.Set;
 
 public abstract class BasicShip<T> implements Ship<T> {
   /**
-   * contains mapping from the ship's coordinates to whether this coordinate is
-   * hit true if hit, false if not been hit, null if the ship does't contain the
-   * coordinate
+   * contains mapping from the ship's coordinates to whether this coordinate is hit
+   * true if hit, false if not been hit, null if the ship does't contain the coordinate
    */
   protected HashMap<Coordinate, Boolean> myPieces;
   protected ShipDisplayInfo<T> myDisplayInfo;
   protected ShipDisplayInfo<T> enemyDisplayInfo;
+  protected Placement placement;
 
-  public BasicShip(Iterable<Coordinate> where, ShipDisplayInfo<T> myDisplayInfo, ShipDisplayInfo<T> enemyDisplayInfo) {
+  public BasicShip(Iterable<Coordinate> where, ShipDisplayInfo<T> myDisplayInfo, ShipDisplayInfo<T> enemyDisplayInfo,Placement placement) {
     this.myDisplayInfo = myDisplayInfo;
     this.enemyDisplayInfo = enemyDisplayInfo;
     myPieces = new HashMap<Coordinate, Boolean>();
     for (Coordinate c : where) {
       myPieces.put(c, false);
     }
+    this.placement = placement;
   }
 
   protected void checkCoordinateInThisShip(Coordinate c) {
@@ -68,5 +69,10 @@ public abstract class BasicShip<T> implements Ship<T> {
   @Override
   public Iterable<Coordinate> getCoordinates() {
     return myPieces.keySet();
+  }
+
+  @Override
+  public Placement getPlacement() {
+    return this.placement;
   }
 }

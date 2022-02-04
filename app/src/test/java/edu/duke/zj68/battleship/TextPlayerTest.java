@@ -142,5 +142,4 @@ public class TextPlayerTest {
                                      "  0| 1| 2| 3                  0| 1| 2| 3\n";
     assertEquals(expected1+"\n"+prompt+"For input string: \":\""+"\n"+expected1+"\n"+prompt+"You missed!\n",bytes.toString());
   }
-
 }

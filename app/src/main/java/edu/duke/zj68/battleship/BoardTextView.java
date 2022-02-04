@@ -1,5 +1,6 @@
 package edu.duke.zj68.battleship;
 
+import java.util.HashSet;
 import java.util.function.Function;
 
 /**

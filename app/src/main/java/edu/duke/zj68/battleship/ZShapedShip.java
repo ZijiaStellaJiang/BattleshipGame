@@ -5,7 +5,7 @@ import java.util.HashSet;
 public class ZShapedShip<T> extends BasicShip<T> {
   private final String name;
   public ZShapedShip(String name, Placement placement, ShipDisplayInfo<T> myDisplayInfo, ShipDisplayInfo<T> enemyDisplayInfo) {
-    super(makeCoords(placement),myDisplayInfo,enemyDisplayInfo);
+    super(makeCoords(placement),myDisplayInfo,enemyDisplayInfo,placement);
     this.name = name;
   }
   public ZShapedShip(String name,Placement placement, T data, T onHit) {

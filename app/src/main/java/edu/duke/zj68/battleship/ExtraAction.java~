@@ -1,0 +1,5 @@
+package edu.duke.zj68.battleship;
+
+public abstract class ExtraAction <T>{
+  Board<T> theBoard;
+}

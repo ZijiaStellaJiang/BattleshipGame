@@ -46,6 +46,7 @@ public class BoardTextViewTest {
     assertThrows(IllegalArgumentException.class, () -> new BoardTextView(tallBoard));
  }
 
+  /*
   private void shipBoardHelper(int w, int h, ArrayList<Coordinate> s, String expectedHeader, String expectedBody) {
     Board<Character> b1 = new BattleShipBoard<Character>(w, h,'X');
     BoardTextView view = new BoardTextView(b1);
@@ -71,6 +72,7 @@ public class BoardTextViewTest {
     String exBody = "A  |s |  |  A\n"+"B  |  |  |s B\n"+"Cs |  |  |  C\n";
     shipBoardHelper(4, 3, shipLocation, exHead, exBody);
   }
+  */
   @Test
   public void test_display_enemy_board() {
     Board<Character> b = new BattleShipBoard<Character>(4, 3, 'X');
@@ -91,7 +93,7 @@ public class BoardTextViewTest {
                                           "B  |  |  |d B\n" +
                                           "C  |  |  |  C\n" +
                                           "  0| 1| 2| 3\n" ;
-    assertEquals(enemyView,view.displayEnemyBoard());
+   assertEquals(enemyView,view.displayEnemyBoard());
   }
   @Test
   public void test_display_own_with_enemy() {
@@ -116,7 +118,35 @@ public class BoardTextViewTest {
                                      "C  |  |  |d C                C  |  |  |  C\n" +
                                      "  0| 1| 2| 3                  0| 1| 2| 3\n";
     assertEquals(expected,view_own.displayMyBoardWithEnemyNextToIt(view_enemy, "Your Ocean", "Player B's Ocean"));
-    
   }
+@Test
+  public void test_after_move_display() {
+    Board<Character> b = new BattleShipBoard<Character>(4, 4, 'X');
+    BoardTextView view = new BoardTextView(b);
+    V2ShipFactory f1= new V2ShipFactory();
+    Ship<Character> old= f1.makeDestroyer(new Placement(new Coordinate("b0"), 'h'));
+    V2ShipFactory f2 = new V2ShipFactory();
+    Ship<Character> newS = f2.makeDestroyer(new Placement("c1h"));
+    b.tryAddShip(old);
+    b.fireAt(new Coordinate("b1"));
+    b.fireAt(new Coordinate("a0"));
+    b.fireAt(new Coordinate("c1"));
+    b.moveShipProcess(old, newS);
+    String myView = "  0| 1| 2| 3\n" +
+                                   "A  |  |  |  A\n" +
+                                   "B  |  |  |  B\n" +
+                                   "C  |d |* |d C\n" +
+                                   "D  |  |  |  D\n"+
+                                    "  0| 1| 2| 3\n" ;
+    assertEquals(myView,view.displayMyOwnBoard());
+    String enemyView = "  0| 1| 2| 3\n" +
+                                   "AX |  |  |  A\n" +
+                                   "B  |d |  |  B\n" +
+                                   "C  |X |  |  C\n" +
+                                   "D  |  |  |  D\n"+
+                                    "  0| 1| 2| 3\n" ;
+   assertEquals(enemyView,view.displayEnemyBoard());
+    
+}
 
 }
