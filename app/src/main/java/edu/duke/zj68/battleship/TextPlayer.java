@@ -22,6 +22,12 @@ public class TextPlayer {
   final HashMap<Character,String> shipNames;
   int moveRemain;
   int sonarRemain;
+  int computerPlaceRow;
+  int computerPlaceCol;
+  char computerPlaceOrientation;
+  int computerRow;
+  int computerCol;
+  boolean isHuman;
 
   protected void setupShipCreationMap() {
     shipCreationFns.put("Submarine", (p) -> shipFactory.makeSubmarine(p));
@@ -56,6 +62,12 @@ public class TextPlayer {
     setupShipName();
     this.moveRemain = 3;
     this.sonarRemain = 3;
+    this.computerPlaceRow = 0;
+    this.computerPlaceCol = 0;
+    this.computerPlaceOrientation = 'V';
+    this.computerRow = 0;
+    this.computerCol = 0;
+    this.isHuman = true;
   }
   public Placement readPlacement(String prompt) throws IOException {
     out.println(prompt);
@@ -183,6 +195,72 @@ public class TextPlayer {
     catch (IllegalArgumentException e) {
       playOneTurnWithActions(enemy, enemyView, enemyName);
     }
-    
+  }
+  public void computerDoOnePlacement(String shipName, Function<Placement,Ship<Character> > createFn) throws IOException {
+    if(computerPlaceCol>=theBoard.getWidth()) {
+      computerPlaceRow++;
+      computerPlaceCol = 0;
+    }
+    if(shipName=="Battleship" || shipName=="Carrier") {
+      computerPlaceOrientation = 'U';
+    }
+    Placement toPlace = new Placement(new Coordinate(computerPlaceRow,computerPlaceCol), computerPlaceOrientation);
+    computerPlaceCol++;
+    Ship<Character> s = createFn.apply(toPlace);
+    while(theBoard.tryAddShip(s)!=null) {
+      if(computerPlaceCol>=theBoard.getWidth()) {
+      computerPlaceRow++;
+      computerPlaceCol = 0;
+    }
+      toPlace = new Placement(new Coordinate(computerPlaceRow,computerPlaceCol), computerPlaceOrientation);
+      computerPlaceCol++;
+      s = createFn.apply(toPlace);
+    }
+  }
+  public void computerDoPlacementPhase() throws IOException {
+    for (String name: shipsToPlace) {
+      computerDoOnePlacement(name, shipCreationFns.get(name));
+    }
+  }
+  public void computerPlayOneTurn(Board<Character> enemy) throws IOException {
+      if(computerCol>=theBoard.getWidth()){
+        computerRow++;
+        computerCol = 0;
+      }
+      Coordinate toFire = new Coordinate(computerRow,computerCol);
+      computerCol++;
+      Ship<Character> fire = enemy.fireAt(toFire);
+      if(fire==null) {
+        out.println("Player "+name+" missed!");
+      }
+      else{
+        Character info = fire.getDisplayInfoAt(toFire, false);
+        String shipName = shipNames.get(info);
+        out.println("Player "+name+" hit your "+shipName+" at "+toFire.toString()+"!");
+      }
+  }
+  public void setUpPlayer() throws IOException {
+    out.println("Is player "+name+" a human player or to be played by computer?\nPlease enter 'H'(human) or 'C'(computer)\n");
+    String s = inputReader.readLine();
+    char option = s.toUpperCase().charAt(0);
+    if(option=='C') {
+      isHuman = false;
+    }
+  }
+  public void doAnyPlacementPhase() throws IOException{
+    if(isHuman) {
+      doPlacementPhase();
+    }
+    else {
+      computerDoPlacementPhase();
+    }
+  }
+  public void doAnyPlayOneTurn(Board<Character> enemy,BoardTextView enemyView,String enemyName) throws IOException{
+    if(isHuman) {
+      playOneTurnWithActions(enemy, enemyView, enemyName);
+    }
+    else {
+      computerPlayOneTurn(enemy);
+    }
   }
 }

@@ -14,23 +14,23 @@ import org.w3c.dom.Text;
 public class App {
   private final TextPlayer player1;
   private final TextPlayer player2;
-
+  
   public App(TextPlayer p1, TextPlayer p2) {
     this.player1 = p1;
     this.player2 = p2;
   }
   public void doPlacementPhase() throws IOException{
-    player1.doPlacementPhase();
-    player2.doPlacementPhase();
+    player1.doAnyPlacementPhase();
+    player2.doAnyPlacementPhase();
   }
   public void doGame() throws IOException {
     while(true) {
-      player1.playOneTurnWithActions(player2.theBoard, player2.view, player2.name);
+      player1.doAnyPlayOneTurn(player2.theBoard, player2.view, player2.name);
        if (player2.theBoard.checkLose()) {
         player2.out.println("Player "+player1.name+" wins!");
         break;
       }
-       player2.playOneTurnWithActions(player1.theBoard, player1.view, player1.name);
+       player2.doAnyPlayOneTurn(player1.theBoard, player1.view, player1.name);
        if (player1.theBoard.checkLose()) {
         player1.out.println("Player "+player2.name+" wins!");
         break;
@@ -45,8 +45,10 @@ public class App {
     V2ShipFactory factory = new V2ShipFactory();
     TextPlayer p1 = new TextPlayer("A",b1, input, System.out,factory);
     TextPlayer p2 = new TextPlayer("B", b2, input, System.out, factory);
+    p1.setUpPlayer();
+    p2.setUpPlayer();
     App app = new App(p1, p2);
     app.doPlacementPhase();
-    app.doGame();;
+    app.doGame();
     }
 }

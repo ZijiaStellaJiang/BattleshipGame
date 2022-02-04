@@ -201,4 +201,42 @@ public class TextPlayerTest {
     String expeced2 = "Submarines occupy 0 squares\nDestroyers occupy 0 squares\nBattleships occupy 0 squares\nCarriers occupy 3 squares\n";
     assertEquals(/*expected1+"\n"+*/"Player A please enter the center coordinate for sonar scan\n\n"+expeced2,bytes.toString());
   }
+  @Test
+  public void test_computer_do_one_placement() throws IOException {
+    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+    Board<Character> boardOwn = new BattleShipBoard<Character>(6, 6, 'X');
+    TextPlayer player = new TextPlayer("A", boardOwn, new BufferedReader(new StringReader("")), new PrintStream(bytes,true), new V2ShipFactory());
+    player.computerDoOnePlacement("Submarine", player.shipCreationFns.get("Submarine"));
+    player.computerDoOnePlacement("Battleship", player.shipCreationFns.get("Battleship"));
+    player.computerDoOnePlacement("Battleship", player.shipCreationFns.get("Battleship"));
+    assertEquals('s', boardOwn.whatIsAtForSelf(new Coordinate("b0")));
+    assertEquals('b', boardOwn.whatIsAtForSelf(new Coordinate("b2")));
+    assertEquals(null, boardOwn.whatIsAtForSelf(new Coordinate("a1")));
+    ByteArrayOutputStream bytes2 = new ByteArrayOutputStream();
+    Board<Character> boardOwn2 = new BattleShipBoard<Character>(2, 6, 'X');
+    TextPlayer player2 = new TextPlayer("A", boardOwn2, new BufferedReader(new StringReader("")), new PrintStream(bytes2,true), new V2ShipFactory());
+    player2.computerDoOnePlacement("Submarine", player.shipCreationFns.get("Submarine"));
+    player2.computerDoOnePlacement("Submarine", player.shipCreationFns.get("Submarine"));
+    player2.computerDoOnePlacement("Submarine", player.shipCreationFns.get("Submarine"));
+    assertEquals('s', boardOwn2.whatIsAtForSelf(new Coordinate("d0")));
+  }
+
+  @Test
+  public void test_computer_fire() throws IOException{
+     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+    Board<Character> boardOwn = new BattleShipBoard<Character>(3, 3, 'X');
+    V2ShipFactory f1 = new V2ShipFactory();
+    Ship<Character> sub1 = f1.makeSubmarine(new Placement("a0h"));
+    boardOwn.tryAddShip(sub1);
+    TextPlayer computerPlayer = new TextPlayer("A", boardOwn, new BufferedReader(new StringReader("")), new PrintStream(bytes,true), new V2ShipFactory());
+    Board<Character> ene = new BattleShipBoard<Character>(3, 3, 'X');
+    V2ShipFactory f2 = new V2ShipFactory();
+    Ship<Character> des = f2.makeDestroyer(new Placement("a2v"));
+    ene.tryAddShip(des);
+    computerPlayer.computerPlayOneTurn(ene);
+    computerPlayer.computerPlayOneTurn(ene);
+    computerPlayer.computerPlayOneTurn(ene);
+    computerPlayer.computerPlayOneTurn(ene);
+    assertEquals("Player A missed!\nPlayer A missed!\nPlayer A hit your Destroyer at (0, 2)!\nPlayer A missed!\n",bytes.toString());
+  }
 }
