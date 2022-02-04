@@ -20,6 +20,8 @@ public class TextPlayer {
   final ArrayList<String> shipsToPlace;
   final HashMap<String, Function<Placement, Ship<Character> > > shipCreationFns;
   final HashMap<Character,String> shipNames;
+  int moveRemain;
+  int sonarRemain;
 
   protected void setupShipCreationMap() {
     shipCreationFns.put("Submarine", (p) -> shipFactory.makeSubmarine(p));
@@ -52,6 +54,8 @@ public class TextPlayer {
     setupShipCreationMap();
     this.shipNames = new HashMap<>();
     setupShipName();
+    this.moveRemain = 3;
+    this.sonarRemain = 3;
   }
   public Placement readPlacement(String prompt) throws IOException {
     out.println(prompt);
@@ -131,6 +135,7 @@ public class TextPlayer {
     Ship<Character> afterMove = shipCreationFns.get(toMove.getName()).apply(newLocation);
     theBoard.moveShipProcess(toMove, afterMove);
     out.println(view.displayMyBoardWithEnemyNextToIt(enemyView, "Your Ocean", "Player "+enemyName+"'s Ocean"));
+    moveRemain = moveRemain-1;
   }
   public void doSonarScan(Board<Character> enemy,BoardTextView enemyView,String enemyName) throws IOException{
     out.println(view.displayMyBoardWithEnemyNextToIt(enemyView, "Your Ocean", "Player "+enemyName+"'s Ocean"));
@@ -140,5 +145,12 @@ public class TextPlayer {
     out.print("Destroyers occupy "+result.get("Destroyer")+" squares\n");
     out.print("Battleships occupy "+result.get("Battleship")+" squares\n");
     out.print("Carriers occupy "+result.get("Carrier")+" squares\n");
+    sonarRemain = sonarRemain-1;
+  }
+  public Character readChooseOption() throws IOException{
+    out.print("Possible actions for Player "+name+":\n\nF Fire at a square\nM Move a ship to another square ("+moveRemain+" remaining)\nS Sonar scan ("+sonarRemain+" remaining)\n\nPlayer "+name+", what would you like to do?");
+    String s = inputReader.readLine();
+    String option = s.toUpperCase();
+    return option.charAt(0);
   }
 }

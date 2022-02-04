@@ -23,19 +23,37 @@ public class App {
     player1.doPlacementPhase();
     player2.doPlacementPhase();
   }
-  public void doAttackingPhase() throws IOException {
+  public void doGame() throws IOException {
     while(true) {
-      player1.playOneTurn(player2.theBoard, player2.view, player2.name);
-      if (player2.theBoard.checkLose()) {
+      char option1 = player1.readChooseOption();
+      if(option1=='M') {
+        player1.doMoveShip(player2.theBoard, player2.view, player2.name);
+      }
+      if(option1=='S') {
+        player1.doSonarScan(player2.theBoard, player2.view, player2.name);
+      }
+      if(option1=='F') {
+        player1.playOneTurn(player2.theBoard, player2.view, player2.name);
+      }
+       if (player2.theBoard.checkLose()) {
         player2.out.println("Player "+player1.name+" wins!");
         break;
       }
-      player2.playOneTurn(player1.theBoard, player1.view, player1.name);
-      if (player1.theBoard.checkLose()) {
+       char option2 = player2.readChooseOption();
+      if(option2=='M') {
+        player2.doMoveShip(player1.theBoard, player1.view, player1.name);
+      }
+      if(option2=='S') {
+        player2.doSonarScan(player1.theBoard, player1.view, player1.name);
+      }
+      if(option2=='F') {
+        player2.playOneTurn(player1.theBoard, player1.view, player1.name);
+      }
+       if (player1.theBoard.checkLose()) {
         player1.out.println("Player "+player2.name+" wins!");
         break;
       }
-    }    
+    }
   }
   
   public static void main(String[] args) throws IOException{
@@ -47,6 +65,6 @@ public class App {
     TextPlayer p2 = new TextPlayer("B", b2, input, System.out, factory);
     App app = new App(p1, p2);
     app.doPlacementPhase();
-    app.doAttackingPhase();
+    app.doGame();;
     }
 }
