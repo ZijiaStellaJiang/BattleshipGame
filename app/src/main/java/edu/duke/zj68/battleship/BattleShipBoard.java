@@ -137,7 +137,16 @@ public class BattleShipBoard<T> implements Board<T>{
   
   @Override
   public void moveShipProcess(Ship<T> oldShip, Ship<T> afterMove) {
-    tryAddShip(afterMove);
+    if(tryAddShip(afterMove)!=null) {
+      tryAddShip(oldShip);
+      for (Coordinate c: oldShip.getCoordinates()) {
+        if (oldShip.wasHitAt(c)) {
+          hitInOldShip.remove(c);
+        }
+      }
+      throw new IllegalArgumentException("This is an invalid placement\n");
+    }
+    //tryAddShip(afterMove);
     for(Coordinate c: oldShip.getCoordinates()) {
       if(oldShip.wasHitAt(c)) {
         findNewCoordinate(oldShip, c, afterMove);

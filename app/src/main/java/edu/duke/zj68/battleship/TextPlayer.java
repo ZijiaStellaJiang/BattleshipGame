@@ -121,14 +121,22 @@ public class TextPlayer {
 
     out.println(prompt);
     String s = inputReader.readLine();
-    if(s==null) {
+    /*if(s==null) {
       throw new EOFException("Empty input");
     }
+    */
     Coordinate inShip = new Coordinate(s);
-    return theBoard.selectShip(inShip);
+    Ship<Character> selectedShip = theBoard.selectShip(inShip);
+    if(selectedShip==null) {
+      throw new IllegalArgumentException("There is not ship in this coordinate\n");
+    }
+    return selectedShip;
   }
-  public void doMoveShip(Board<Character> enemy,BoardTextView enemyView,String enemyName) throws IOException{
-    out.println(view.displayMyBoardWithEnemyNextToIt(enemyView, "Your Ocean", "Player "+enemyName+"'s Ocean"));
+  public void doMoveShip(/*Board<Character> enemy,*/BoardTextView enemyView,String enemyName) throws IOException{
+    if(moveRemain==0) {
+      throw new IllegalArgumentException("You are out of use of moving ship\n");
+    }
+    //out.println(view.displayMyBoardWithEnemyNextToIt(enemyView, "Your Ocean", "Player "+enemyName+"'s Ocean"));
     Ship<Character> toMove = readShip("Player "+name+" which ship do you want to move? You can enter any coordinate in the ship\n");
     theBoard.removeShip(toMove);
     Placement newLocation = readPlacement("Please enter the new placement\n");
@@ -137,8 +145,11 @@ public class TextPlayer {
     out.println(view.displayMyBoardWithEnemyNextToIt(enemyView, "Your Ocean", "Player "+enemyName+"'s Ocean"));
     moveRemain = moveRemain-1;
   }
-  public void doSonarScan(Board<Character> enemy,BoardTextView enemyView,String enemyName) throws IOException{
-    out.println(view.displayMyBoardWithEnemyNextToIt(enemyView, "Your Ocean", "Player "+enemyName+"'s Ocean"));
+  public void doSonarScan(Board<Character> enemy,/*BoardTextView enemyView,*/String enemyName) throws IOException{
+    if(sonarRemain==0) {
+      throw new IllegalArgumentException("You are out of use of sonar scan\n");
+    }
+    //out.println(view.displayMyBoardWithEnemyNextToIt(enemyView, "Your Ocean", "Player "+enemyName+"'s Ocean"));
     Coordinate center = readCoordinate("Player "+name+" please enter the center coordinate for sonar scan\n");
     HashMap<String,Integer> result = enemy.doSonarScan(center);
     out.print("Submarines occupy "+result.get("Submarine")+" squares\n");
@@ -147,10 +158,31 @@ public class TextPlayer {
     out.print("Carriers occupy "+result.get("Carrier")+" squares\n");
     sonarRemain = sonarRemain-1;
   }
-  public Character readChooseOption() throws IOException{
+  public Character readChooseOption(Board<Character> enemy,BoardTextView enemyView,String enemyName) throws IOException{
+    out.println(view.displayMyBoardWithEnemyNextToIt(enemyView, "Your Ocean", "Player "+enemyName+"'s Ocean"));
     out.print("Possible actions for Player "+name+":\n\nF Fire at a square\nM Move a ship to another square ("+moveRemain+" remaining)\nS Sonar scan ("+sonarRemain+" remaining)\n\nPlayer "+name+", what would you like to do?");
     String s = inputReader.readLine();
     String option = s.toUpperCase();
     return option.charAt(0);
+  }
+  public void playOneTurnWithActions(Board<Character> enemy,BoardTextView enemyView,String enemyName) throws IOException{
+    Character option = readChooseOption(enemy, enemyView, enemyName);
+    try{
+      switch(option) {
+      case 'M' :
+        doMoveShip(enemyView, enemyName);
+        break;
+      case 'S' :
+        doSonarScan(enemy, enemyName);
+        break;
+      case 'F':
+        playOneTurn(enemy, enemyView, enemyName);
+        break;
+      }
+    }
+    catch (IllegalArgumentException e) {
+      playOneTurnWithActions(enemy, enemyView, enemyName);
+    }
+    
   }
 }

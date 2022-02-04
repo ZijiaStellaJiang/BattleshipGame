@@ -25,30 +25,12 @@ public class App {
   }
   public void doGame() throws IOException {
     while(true) {
-      char option1 = player1.readChooseOption();
-      if(option1=='M') {
-        player1.doMoveShip(player2.theBoard, player2.view, player2.name);
-      }
-      if(option1=='S') {
-        player1.doSonarScan(player2.theBoard, player2.view, player2.name);
-      }
-      if(option1=='F') {
-        player1.playOneTurn(player2.theBoard, player2.view, player2.name);
-      }
+      player1.playOneTurnWithActions(player2.theBoard, player2.view, player2.name);
        if (player2.theBoard.checkLose()) {
         player2.out.println("Player "+player1.name+" wins!");
         break;
       }
-       char option2 = player2.readChooseOption();
-      if(option2=='M') {
-        player2.doMoveShip(player1.theBoard, player1.view, player1.name);
-      }
-      if(option2=='S') {
-        player2.doSonarScan(player1.theBoard, player1.view, player1.name);
-      }
-      if(option2=='F') {
-        player2.playOneTurn(player1.theBoard, player1.view, player1.name);
-      }
+       player2.playOneTurnWithActions(player1.theBoard, player1.view, player1.name);
        if (player1.theBoard.checkLose()) {
         player1.out.println("Player "+player2.name+" wins!");
         break;
