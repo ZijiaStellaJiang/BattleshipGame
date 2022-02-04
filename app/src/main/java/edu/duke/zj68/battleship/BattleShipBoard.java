@@ -137,7 +137,6 @@ public class BattleShipBoard<T> implements Board<T>{
   
   @Override
   public void moveShipProcess(Ship<T> oldShip, Ship<T> afterMove) {
-    removeShip(oldShip);
     tryAddShip(afterMove);
     for(Coordinate c: oldShip.getCoordinates()) {
       if(oldShip.wasHitAt(c)) {
@@ -163,7 +162,8 @@ public class BattleShipBoard<T> implements Board<T>{
    *with needed display info change
    *record the coordinate that has been hit in the ship toRemove
    */
-  protected void removeShip(Ship<T> toRemove) {
+  @Override
+  public void removeShip(Ship<T> toRemove) {
     //HashSet<Coordinate> hitInShipToRemove = new HashSet<>();
     for (Coordinate c: toRemove.getCoordinates()) {
       if (toRemove.wasHitAt(c)) {
@@ -183,5 +183,41 @@ public class BattleShipBoard<T> implements Board<T>{
       //return c;
     }
     //return null;
+  }
+  
+  /**
+   *@return the set of coordinates the sonar can scan
+   */  
+  protected HashSet<Coordinate> sonarCoords (Coordinate center) {
+    HashSet<Coordinate> sonarRange = new HashSet<>();
+    int row = center.getRow();
+    int col = center.getColumn();
+    for( int r = row-3; r< row+4;r++) {
+      int rowDif = row>r ? row-r : r-row ;
+      for (int c = col-(3-rowDif); c<col+(3-rowDif)+1 ; c++) {
+        sonarRange.add(new Coordinate(r,c));
+      }
+    }
+    return sonarRange;
+  }
+  protected int getShipSquareNumber( String shipName, HashSet<Coordinate> sonarRange) {
+    int count = 0;
+    for (Coordinate c : sonarRange) {
+      Ship<T> s = selectShip(c);
+      if(s!=null && s.getName()==shipName) {
+        count++;
+      }
+    }
+    return count;
+  }
+  @Override
+  public HashMap<String , Integer> doSonarScan(Coordinate center) {
+    HashMap<String , Integer> shipSquareNum = new HashMap<>(); 
+    HashSet<Coordinate> sonarRange = sonarCoords(center);
+    shipSquareNum.put("Submarine", getShipSquareNumber("Submarine", sonarRange));
+    shipSquareNum.put("Destroyer", getShipSquareNumber("Destroyer", sonarRange));
+    shipSquareNum.put("Battleship", getShipSquareNumber("Battleship", sonarRange));
+    shipSquareNum.put("Carrier", getShipSquareNumber("Carrier", sonarRange));
+    return shipSquareNum;
   }
 }

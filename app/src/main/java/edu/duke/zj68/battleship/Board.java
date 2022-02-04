@@ -1,7 +1,6 @@
 package edu.duke.zj68.battleship;
 
-import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.HashMap;
 
 public interface Board<T> {
   public int getWidth();
@@ -21,4 +20,8 @@ public interface Board<T> {
   public boolean checkLose() ;
 
   public void moveShipProcess(Ship<T> oldShip, Ship<T> afterMove);
+
+  public void removeShip(Ship<T> toRemove) ;
+
+  public HashMap<String , Integer> doSonarScan(Coordinate center) ;
 }

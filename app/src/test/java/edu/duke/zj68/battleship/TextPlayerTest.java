@@ -142,4 +142,61 @@ public class TextPlayerTest {
                                      "  0| 1| 2| 3                  0| 1| 2| 3\n";
     assertEquals(expected1+"\n"+prompt+"For input string: \":\""+"\n"+expected1+"\n"+prompt+"You missed!\n",bytes.toString());
   }
+  @Test
+  public void test_do_move_ship() throws IOException{
+    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+    Board<Character> boardOwn = new BattleShipBoard<Character>(4, 3, 'X');
+    V2ShipFactory f1 = new V2ShipFactory();
+    Ship<Character> bat1 = f1.makeBattleship(new Placement("a0d"));
+    boardOwn.tryAddShip(bat1);
+    TextPlayer player = new TextPlayer("A", boardOwn, new BufferedReader(new StringReader("a1\nb1d\n")), new PrintStream(bytes,true), new V2ShipFactory());
+    Board<Character> ene = new BattleShipBoard<Character>(4, 3, 'X');
+    BoardTextView eneView = new BoardTextView(ene);
+    V2ShipFactory f2 = new V2ShipFactory();
+    Ship<Character> des = f2.makeDestroyer(new Placement("a3v"));
+    ene.tryAddShip(des);
+    player.doMoveShip(ene, eneView, "B");
+    String expected1 = "Your Ocean                     Player B's Ocean\n"+
+                                     "  0| 1| 2| 3                  0| 1| 2| 3\n" +
+                                     "Ab |b |b |  A                A  |  |  |  A\n" +
+                                     "B  |b |  |  B                B  |  |  |  B\n" +
+                                     "C  |  |  |  C                C  |  |  |  C\n" +
+                                     "  0| 1| 2| 3                  0| 1| 2| 3\n";
+    String expected2 = "Your Ocean                     Player B's Ocean\n"+
+                                     "  0| 1| 2| 3                  0| 1| 2| 3\n" +
+                                     "A  |  |  |  A                A  |  |  |  A\n" +
+                                     "B  |b |b |b B                B  |  |  |  B\n" +
+                                     "C  |  |b |  C                C  |  |  |  C\n" +
+                                     "  0| 1| 2| 3                  0| 1| 2| 3\n";
+    assertEquals(expected1+"\n"+"Player A which ship do you want to move? You can enter any coordinate in the ship\n\n"+"Please enter the new placement\n\n"+expected2+"\n",bytes.toString());
+  }
+  @Test
+  public void test_do_sonar_scan() throws IOException{
+    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+    Board<Character> boardOwn = new BattleShipBoard<Character>(6, 6, 'X');
+    V2ShipFactory f1 = new V2ShipFactory();
+    Ship<Character> bat1 = f1.makeBattleship(new Placement("a0d"));
+    boardOwn.tryAddShip(bat1);
+    TextPlayer player = new TextPlayer("A", boardOwn, new BufferedReader(new StringReader("e5\n")), new PrintStream(bytes,true), new V2ShipFactory());
+    Board<Character> ene = new BattleShipBoard<Character>(6, 6, 'X');
+    BoardTextView eneView = new BoardTextView(ene);
+    V2ShipFactory f2 = new V2ShipFactory();
+    Ship<Character> des = f2.makeDestroyer(new Placement("a3v"));
+    ene.tryAddShip(des);
+    V2ShipFactory f3 = new V2ShipFactory();
+    Ship<Character> car = f3.makeCarrier(new Placement("d0r"));
+    ene.tryAddShip(car);
+    player.doSonarScan(ene, eneView, "B");
+    String expected1 = "Your Ocean                           Player B's Ocean\n"+
+                                     "  0| 1| 2| 3| 4| 5                  0| 1| 2| 3| 4| 5\n" +
+                                     "Ab |b |b |  |  |  A                A  |  |  |  |  |  A\n" +
+                                     "B  |b |  |  |  |  B                B  |  |  |  |  |  B\n"+
+                                     "C  |  |  |  |  |  C                C  |  |  |  |  |  C\n"+
+                                     "D  |  |  |  |  |  D                D  |  |  |  |  |  D\n"+
+                                     "E  |  |  |  |  |  E                E  |  |  |  |  |  E\n"+
+                                     "F  |  |  |  |  |  F                F  |  |  |  |  |  F\n"+
+                                     "  0| 1| 2| 3| 4| 5                  0| 1| 2| 3| 4| 5\n";
+    String expeced2 = "Submarines occupy 0 squares\nDestroyers occupy 0 squares\nBattleships occupy 0 squares\nCarriers occupy 3 squares\n";
+    assertEquals(expected1+"\n"+"Player A please enter the center coordinate for sonar scan\n\n"+expeced2,bytes.toString());
+  }
 }

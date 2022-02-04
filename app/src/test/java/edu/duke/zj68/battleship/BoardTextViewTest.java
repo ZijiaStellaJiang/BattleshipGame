@@ -131,6 +131,7 @@ public class BoardTextViewTest {
     b.fireAt(new Coordinate("b1"));
     b.fireAt(new Coordinate("a0"));
     b.fireAt(new Coordinate("c1"));
+    b.removeShip(old);
     b.moveShipProcess(old, newS);
     String myView = "  0| 1| 2| 3\n" +
                                    "A  |  |  |  A\n" +

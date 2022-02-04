@@ -113,8 +113,32 @@ public class TextPlayer {
       playOneTurn(enemy, enemyView, enemyName);
     }
   }
-  public void doMoveShip(Ship<Character> toMove, Placement newLocation) {
+  public Ship<Character> readShip(String prompt) throws IOException{
+
+    out.println(prompt);
+    String s = inputReader.readLine();
+    if(s==null) {
+      throw new EOFException("Empty input");
+    }
+    Coordinate inShip = new Coordinate(s);
+    return theBoard.selectShip(inShip);
+  }
+  public void doMoveShip(Board<Character> enemy,BoardTextView enemyView,String enemyName) throws IOException{
+    out.println(view.displayMyBoardWithEnemyNextToIt(enemyView, "Your Ocean", "Player "+enemyName+"'s Ocean"));
+    Ship<Character> toMove = readShip("Player "+name+" which ship do you want to move? You can enter any coordinate in the ship\n");
+    theBoard.removeShip(toMove);
+    Placement newLocation = readPlacement("Please enter the new placement\n");
     Ship<Character> afterMove = shipCreationFns.get(toMove.getName()).apply(newLocation);
     theBoard.moveShipProcess(toMove, afterMove);
+    out.println(view.displayMyBoardWithEnemyNextToIt(enemyView, "Your Ocean", "Player "+enemyName+"'s Ocean"));
+  }
+  public void doSonarScan(Board<Character> enemy,BoardTextView enemyView,String enemyName) throws IOException{
+    out.println(view.displayMyBoardWithEnemyNextToIt(enemyView, "Your Ocean", "Player "+enemyName+"'s Ocean"));
+    Coordinate center = readCoordinate("Player "+name+" please enter the center coordinate for sonar scan\n");
+    HashMap<String,Integer> result = enemy.doSonarScan(center);
+    out.print("Submarines occupy "+result.get("Submarine")+" squares\n");
+    out.print("Destroyers occupy "+result.get("Destroyer")+" squares\n");
+    out.print("Battleships occupy "+result.get("Battleship")+" squares\n");
+    out.print("Carriers occupy "+result.get("Carrier")+" squares\n");
   }
 }
