@@ -207,7 +207,7 @@ public class BattleShipBoard<T> implements Board<T>{
     }
     else if (oldShip.getName()=="Battleship") {
       if(oldOri=='U') {
-        if(newOri=='R') {
+        if(newOri=='R' ) {
           Coordinate refer = new Coordinate(oldUpper.getRow()+1,oldUpper.getColumn());
           newCoordinate = new Coordinate(newUpper.getRow()+oldHit.getColumn()-refer.getColumn(),newUpper.getColumn()+refer.getRow()-oldHit.getRow());
         }
@@ -315,7 +315,7 @@ public class BattleShipBoard<T> implements Board<T>{
           Coordinate refer = new Coordinate(oldUpper.getRow()+1,oldUpper.getColumn()+4);
           newCoordinate = new Coordinate(newUpper.getRow()+refer.getRow()-oldHit.getRow(),newUpper.getColumn()+refer.getColumn()-oldHit.getColumn());
         }
-        else /*(oldOri=='L' && newOri=='D') */{
+        else {
           Coordinate refer = new Coordinate(oldUpper.getRow(),oldUpper.getColumn()+4);
           newCoordinate = new Coordinate(newUpper.getRow()+refer.getColumn()-oldHit.getColumn(),newUpper.getColumn()+oldHit.getRow()-refer.getRow());
         }

@@ -115,7 +115,6 @@ public class TextPlayerTest {
                                      "B  |s |  |  B                B  |  |  |  B\n" +
                                      "C  |s |  |  C                C  |  |  |  C\n" +
                                      "  0| 1| 2| 3                  0| 1| 2| 3\n";
-    //assertEquals(expected1+"\n"+"Player A which coordinate do you wan to fire at?\n"+"You hit a Destroyer!\n",bytes.toString());
     player.playOneTurn(ene, eneView, "B");
     String expected2 = "Your Ocean                     Player B's Ocean\n"+
                                      "  0| 1| 2| 3                  0| 1| 2| 3\n" +
@@ -156,20 +155,13 @@ public class TextPlayerTest {
     Ship<Character> des = f2.makeDestroyer(new Placement("a3v"));
     ene.tryAddShip(des);
     player.doMoveShip(eneView, "B");
-    /*String expected1 = "Your Ocean                     Player B's Ocean\n"+
-                                     "  0| 1| 2| 3                  0| 1| 2| 3\n" +
-                                     "Ab |b |b |  A                A  |  |  |  A\n" +
-                                     "B  |b |  |  B                B  |  |  |  B\n" +
-                                     "C  |  |  |  C                C  |  |  |  C\n" +
-                                     "  0| 1| 2| 3                  0| 1| 2| 3\n";
-    */
     String expected2 = "Your Ocean                     Player B's Ocean\n"+
                                      "  0| 1| 2| 3                  0| 1| 2| 3\n" +
                                      "A  |  |  |  A                A  |  |  |  A\n" +
                                      "B  |b |b |b B                B  |  |  |  B\n" +
                                      "C  |  |b |  C                C  |  |  |  C\n" +
                                      "  0| 1| 2| 3                  0| 1| 2| 3\n";
-    assertEquals(/*expected1+"\n"+*/"Player A which ship do you want to move? You can enter any coordinate in the ship\n\n"+"Please enter the new placement\n\n"+expected2+"\n",bytes.toString());
+    assertEquals("Player A which ship do you want to move? You can enter any coordinate in the ship\n\n"+"Please enter the new placement\n\n"+expected2+"\n",bytes.toString());
   }
   @Test
   public void test_do_sonar_scan() throws IOException{
@@ -180,7 +172,6 @@ public class TextPlayerTest {
     boardOwn.tryAddShip(bat1);
     TextPlayer player = new TextPlayer("A", boardOwn, new BufferedReader(new StringReader("e5\n")), new PrintStream(bytes,true), new V2ShipFactory());
     Board<Character> ene = new BattleShipBoard<Character>(6, 6, 'X');
-    //BoardTextView eneView = new BoardTextView(ene);
     V2ShipFactory f2 = new V2ShipFactory();
     Ship<Character> des = f2.makeDestroyer(new Placement("a3v"));
     ene.tryAddShip(des);
@@ -188,18 +179,8 @@ public class TextPlayerTest {
     Ship<Character> car = f3.makeCarrier(new Placement("d0r"));
     ene.tryAddShip(car);
     player.doSonarScan(ene, "B");
-    /*String expected1 = "Your Ocean                           Player B's Ocean\n"+
-                                     "  0| 1| 2| 3| 4| 5                  0| 1| 2| 3| 4| 5\n" +
-                                     "Ab |b |b |  |  |  A                A  |  |  |  |  |  A\n" +
-                                     "B  |b |  |  |  |  B                B  |  |  |  |  |  B\n"+
-                                     "C  |  |  |  |  |  C                C  |  |  |  |  |  C\n"+
-                                     "D  |  |  |  |  |  D                D  |  |  |  |  |  D\n"+
-                                     "E  |  |  |  |  |  E                E  |  |  |  |  |  E\n"+
-                                     "F  |  |  |  |  |  F                F  |  |  |  |  |  F\n"+
-                                     "  0| 1| 2| 3| 4| 5                  0| 1| 2| 3| 4| 5\n";
-    */
     String expeced2 = "Submarines occupy 0 squares\nDestroyers occupy 0 squares\nBattleships occupy 0 squares\nCarriers occupy 3 squares\n";
-    assertEquals(/*expected1+"\n"+*/"Player A please enter the center coordinate for sonar scan\n\n"+expeced2,bytes.toString());
+    assertEquals("Player A please enter the center coordinate for sonar scan\n\n"+expeced2,bytes.toString());
   }
   @Test
   public void test_computer_do_one_placement() throws IOException {

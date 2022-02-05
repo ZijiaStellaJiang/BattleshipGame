@@ -76,7 +76,6 @@ public class PlacementTest {
   public void test_string_constructor_error_cases(){
     assertThrows(IllegalArgumentException.class, () -> new Placement("AAH"));
     assertThrows(IllegalArgumentException.class, () -> new Placement("00V"));
-    //assertThrows(IllegalArgumentException.class, () -> new Placement("A0:"));
   }
 }
 

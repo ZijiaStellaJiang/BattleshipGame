@@ -62,10 +62,7 @@ public class BoardTextView {
       bothBoard.append(" ");
     }
     bothBoard.append(enemyHeader);
-    bothBoard.append("\n");
-    //bothBoard.append(myViewLines[0]);
-    //bothBoard.append("");
-    
+    bothBoard.append("\n");    
     int len = myViewLines.length;
     for (int i = 0;i<len;i++) {
       bothBoard.append(myViewLines[i]);
@@ -103,7 +100,7 @@ public class BoardTextView {
       ans.append(letter);
       for (int j = 0; j < toDisplay.getWidth() ; j++) {
         Coordinate where = new Coordinate(i,j);
-        Character displayInfo = getSquareFn.apply(where); //toDisplay.whatIsAtForSelf(where);
+        Character displayInfo = getSquareFn.apply(where); 
         if (displayInfo==null) {
           ans.append("  ");
         }

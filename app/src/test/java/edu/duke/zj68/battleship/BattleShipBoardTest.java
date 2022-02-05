@@ -24,24 +24,6 @@ public class BattleShipBoardTest {
     assertThrows(IllegalArgumentException.class, () -> new BattleShipBoard<Character>(10,-5,'X'));
     assertThrows(IllegalArgumentException.class, () -> new BattleShipBoard<Character>(-8,20,'X'));
   }
-
-  /**private<T> void checkWhatIsAtBoard(BattleShipBoard<T> b, T[][] expected) {
-    /**
-     *this check for empty board
-     
-    for (int i = 0; i<b.getHeight(); i++) {
-       for (int j = 0; j<b.getWidth(); j++) {
-         Coordinate c = new Coordinate(i, j);
-         assertEquals(null,b.whatIsAt(c));
-         if(expected[i][j]!=null) {
-           Ship<Character> toAdd = new BasicShip(c);
-           assertEquals(true,b.tryAddShip(toAdd));
-           assertEquals('s',b.whatIsAt(c));
-         }
-       }
-       }
-    
-       }*/
   @Test
   public void test_ship_in_board_2by3() {
     BattleShipBoard<Character> b1 = new BattleShipBoard<Character>(2, 3,'X');

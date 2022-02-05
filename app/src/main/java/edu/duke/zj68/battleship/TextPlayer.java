@@ -133,10 +133,6 @@ public class TextPlayer {
 
     out.println(prompt);
     String s = inputReader.readLine();
-    /*if(s==null) {
-      throw new EOFException("Empty input");
-    }
-    */
     Coordinate inShip = new Coordinate(s);
     Ship<Character> selectedShip = theBoard.selectShip(inShip);
     if(selectedShip==null) {
@@ -160,7 +156,6 @@ public class TextPlayer {
     if(sonarRemain==0) {
       throw new IllegalArgumentException("You are out of use of sonar scan\n");
     }
-    //out.println(view.displayMyBoardWithEnemyNextToIt(enemyView, "Your Ocean", "Player "+enemyName+"'s Ocean"));
     Coordinate center = readCoordinate("Player "+name+" please enter the center coordinate for sonar scan\n");
     HashMap<String,Integer> result = enemy.doSonarScan(center);
     out.print("Submarines occupy "+result.get("Submarine")+" squares\n");

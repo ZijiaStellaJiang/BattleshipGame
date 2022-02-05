@@ -46,33 +46,6 @@ public class BoardTextViewTest {
     assertThrows(IllegalArgumentException.class, () -> new BoardTextView(tallBoard));
  }
 
-  /*
-  private void shipBoardHelper(int w, int h, ArrayList<Coordinate> s, String expectedHeader, String expectedBody) {
-    Board<Character> b1 = new BattleShipBoard<Character>(w, h,'X');
-    BoardTextView view = new BoardTextView(b1);
-    for (Coordinate where : s) {
-      Ship<Character> ship = new RectangleShip<Character>(where,'s','*');
-      b1.tryAddShip(ship);
-    }
-   assertEquals(expectedHeader,view.makeHeader());
-    assertEquals(expectedBody,view.makeBody((c)-> b1.whatIsAtForSelf(c)));
-    String expected = expectedHeader + expectedBody + expectedHeader;
-    assertEquals(expected,view.displayMyOwnBoard());
-  }
-  @Test
-  public void test_display_ship_board_4by3() {
-    Coordinate c1 = new Coordinate(0,1);
-    Coordinate c2 = new Coordinate(1,3);
-    Coordinate c3 = new Coordinate("C0");
-    ArrayList<Coordinate> shipLocation = new ArrayList<Coordinate>();
-    shipLocation.add(c1);
-    shipLocation.add(c2);
-    shipLocation.add(c3);
-    String exHead = "  0| 1| 2| 3\n";
-    String exBody = "A  |s |  |  A\n"+"B  |  |  |s B\n"+"Cs |  |  |  C\n";
-    shipBoardHelper(4, 3, shipLocation, exHead, exBody);
-  }
-  */
   @Test
   public void test_display_enemy_board() {
     Board<Character> b = new BattleShipBoard<Character>(4, 3, 'X');
