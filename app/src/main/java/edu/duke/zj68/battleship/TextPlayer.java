@@ -148,7 +148,6 @@ public class TextPlayer {
     if(moveRemain==0) {
       throw new IllegalArgumentException("You are out of use of moving ship\n");
     }
-    //out.println(view.displayMyBoardWithEnemyNextToIt(enemyView, "Your Ocean", "Player "+enemyName+"'s Ocean"));
     Ship<Character> toMove = readShip("Player "+name+" which ship do you want to move? You can enter any coordinate in the ship\n");
     theBoard.removeShip(toMove);
     Placement newLocation = readPlacement("Please enter the new placement\n");

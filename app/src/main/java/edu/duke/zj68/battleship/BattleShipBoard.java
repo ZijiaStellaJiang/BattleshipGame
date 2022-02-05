@@ -73,6 +73,9 @@ public class BattleShipBoard<T> implements Board<T>{
   public Ship<T> fireAt(Coordinate c) {
     Ship<T> fire = selectShip(c);
     if(fire!=null) {
+      if(hitInNewShip.contains(c)) {
+        hitInNewShip.remove(c);
+      }
       fire.recordHitAt(c);
       return fire;
     }
@@ -98,19 +101,19 @@ public class BattleShipBoard<T> implements Board<T>{
   protected T whatIsAt(Coordinate where, boolean isSelf) {
     for (Ship<T> s:myShips) {
       if (s.occupiesCoordinates(where)) {
-        if(isSelf==false && enemyMissedWithNewShip.contains(where) && s.wasHitAt(where)==false) {
+        if(!isSelf && enemyMissedWithNewShip.contains(where) && s.wasHitAt(where)==false) {
           return missInfo;
         }
-        if(isSelf==true || !hitInNewShip.contains(where)) {
+        if(isSelf || !hitInNewShip.contains(where)) {
           return s.getDisplayInfoAt(where,isSelf);
         }
         return null;
       }
     }
-    if (isSelf== false && hitInOldShip.containsKey(where)) {
+    if (!isSelf && hitInOldShip.containsKey(where)) {
       return hitInOldShip.get(where);
     }
-    if (isSelf==false && enemyMisses.contains(where)) {
+    if (!isSelf && enemyMisses.contains(where)) {
       return missInfo;
     }
     return null;
@@ -146,14 +149,15 @@ public class BattleShipBoard<T> implements Board<T>{
       }
       throw new IllegalArgumentException("This is an invalid placement\n");
     }
-    //tryAddShip(afterMove);
+    HashSet<Coordinate> hitInNewInThisShip = new HashSet<>();
     for(Coordinate c: oldShip.getCoordinates()) {
       if(oldShip.wasHitAt(c)) {
-        findNewCoordinate(oldShip, c, afterMove);
+        hitInNewInThisShip.add(findNewCoordinate(oldShip, c, afterMove));     
       }
     }
-    for(Coordinate c : hitInNewShip) {
-      fireAt(c);
+    for(Coordinate c : hitInNewInThisShip) {
+      afterMove.recordHitAt(c);
+      //fireAt(c);
     }
     checkEnemyMissed(afterMove);
   }
@@ -181,17 +185,144 @@ public class BattleShipBoard<T> implements Board<T>{
     }
     myShips.remove(toRemove);
   }
-  protected void findNewCoordinate(Ship<T> oldShip, Coordinate oldHit ,Ship<T> newShip) {
+  /**
+   *find the old ship's hit's relative cooridinate in the new location ship
+   *if special ship, rotate
+   *if rectangel ship, stick with upper left coordinate
+   */
+  protected Coordinate findNewCoordinate(Ship<T> oldShip, Coordinate oldHit ,Ship<T> newShip) {
+    Coordinate newCoordinate = new Coordinate(0,0);
     Coordinate oldUpper = oldShip.getPlacement().getCoordinate();
     Coordinate newUpper = newShip.getPlacement().getCoordinate();
     Character oldOri = oldShip.getPlacement().getOrientation();
     Character newOri = newShip.getPlacement().getOrientation();
     if (oldOri==newOri){
-      Coordinate c = new Coordinate(newUpper.getRow()+oldHit.getRow()-oldUpper.getRow(),newUpper.getColumn()+oldHit.getColumn()-oldUpper.getColumn());
-      hitInNewShip.add(c);
-      //return c;
+      newCoordinate= new Coordinate(newUpper.getRow()+oldHit.getRow()-oldUpper.getRow(),newUpper.getColumn()+oldHit.getColumn()-oldUpper.getColumn());
     }
-    //return null;
+    else if(oldOri=='H') {
+      newCoordinate = new Coordinate(newUpper.getRow()+oldHit.getColumn()-oldUpper.getColumn(),newUpper.getColumn());
+    }
+    else if(oldOri=='V') {
+      newCoordinate = new Coordinate(newUpper.getRow(),newUpper.getColumn()+oldHit.getRow()-oldUpper.getRow());
+    }
+    else if (oldShip.getName()=="Battleship") {
+      if(oldOri=='U') {
+        if(newOri=='R') {
+          Coordinate refer = new Coordinate(oldUpper.getRow()+1,oldUpper.getColumn());
+          newCoordinate = new Coordinate(newUpper.getRow()+oldHit.getColumn()-refer.getColumn(),newUpper.getColumn()+refer.getRow()-oldHit.getRow());
+        }
+        else if(newOri=='D') {
+          Coordinate refer = new Coordinate(oldUpper.getRow()+1,oldUpper.getColumn()+2);
+          newCoordinate = new Coordinate(newUpper.getRow()+refer.getRow()-oldHit.getRow(),newUpper.getColumn()+refer.getColumn()-oldHit.getColumn());
+        }
+        else{
+          Coordinate refer = new Coordinate(oldUpper.getRow(),oldUpper.getColumn()+2);
+          newCoordinate = new Coordinate(newUpper.getRow()+refer.getColumn()-oldHit.getColumn(),newUpper.getColumn()+oldHit.getRow()-refer.getRow());
+        }
+      }
+      else if (oldOri=='R') {
+        if(newOri=='D') {
+          Coordinate refer = new Coordinate(oldUpper.getRow()+2,oldUpper.getColumn());
+          newCoordinate = new Coordinate(newUpper.getRow()+oldHit.getColumn()-refer.getColumn(),newUpper.getColumn()+refer.getRow()-oldHit.getRow());
+        }
+        else if(newOri=='L') {
+          Coordinate refer = new Coordinate(oldUpper.getRow()+2,oldUpper.getColumn()+1);
+          newCoordinate = new Coordinate(newUpper.getRow()+refer.getRow()-oldHit.getRow(),newUpper.getColumn()+refer.getColumn()-oldHit.getColumn());
+        }
+        else{
+          Coordinate refer = new Coordinate(oldUpper.getRow(),oldUpper.getColumn()+1);
+          newCoordinate = new Coordinate(newUpper.getRow()+refer.getColumn()-oldHit.getColumn(),newUpper.getColumn()+oldHit.getRow()-refer.getRow());
+        }
+      }
+      else if(oldOri=='D') {
+        if(newOri=='L') {
+          Coordinate refer = new Coordinate(oldUpper.getRow()+1,oldUpper.getColumn());
+          newCoordinate = new Coordinate(newUpper.getRow()+oldHit.getColumn()-refer.getColumn(),newUpper.getColumn()+refer.getRow()-oldHit.getRow());
+        }
+        else if( newOri=='U') {
+          Coordinate refer = new Coordinate(oldUpper.getRow()+1,oldUpper.getColumn()+2);
+          newCoordinate = new Coordinate(newUpper.getRow()+refer.getRow()-oldHit.getRow(),newUpper.getColumn()+refer.getColumn()-oldHit.getColumn());
+        }
+        else {
+          Coordinate refer = new Coordinate(oldUpper.getRow(),oldUpper.getColumn()+2);
+          newCoordinate = new Coordinate(newUpper.getRow()+refer.getColumn()-oldHit.getColumn(),newUpper.getColumn()+oldHit.getRow()-refer.getRow());
+        }
+      }
+      else {
+        if(newOri=='U') {
+          Coordinate refer = new Coordinate(oldUpper.getRow()+2,oldUpper.getColumn());
+          newCoordinate = new Coordinate(newUpper.getRow()+oldHit.getColumn()-refer.getColumn(),newUpper.getColumn()+refer.getRow()-oldHit.getRow());
+        }
+        else if( newOri=='R') {
+          Coordinate refer = new Coordinate(oldUpper.getRow()+2,oldUpper.getColumn()+1);
+          newCoordinate = new Coordinate(newUpper.getRow()+refer.getRow()-oldHit.getRow(),newUpper.getColumn()+refer.getColumn()-oldHit.getColumn());
+        }
+        else /*(oldOri=='L' && newOri=='D') */{
+          Coordinate refer = new Coordinate(oldUpper.getRow(),oldUpper.getColumn()+1);
+          newCoordinate = new Coordinate(newUpper.getRow()+refer.getColumn()-oldHit.getColumn(),newUpper.getColumn()+oldHit.getRow()-refer.getRow());
+        }
+      }
+    }
+    else /*oldShip.name=="Carrier"*/{
+      if(oldOri=='U') {
+        if( newOri=='R') {
+          Coordinate refer = new Coordinate(oldUpper.getRow()+4,oldUpper.getColumn());
+          newCoordinate = new Coordinate(newUpper.getRow()+oldHit.getColumn()-refer.getColumn(),newUpper.getColumn()+refer.getRow()-oldHit.getRow());
+        }
+        else if(newOri=='D') {
+          Coordinate refer = new Coordinate(oldUpper.getRow()+4,oldUpper.getColumn()+1);
+          newCoordinate = new Coordinate(newUpper.getRow()+refer.getRow()-oldHit.getRow(),newUpper.getColumn()+refer.getColumn()-oldHit.getColumn());
+        }
+        else  {
+          Coordinate refer = new Coordinate(oldUpper.getRow(),oldUpper.getColumn()+1);
+          newCoordinate = new Coordinate(newUpper.getRow()+refer.getColumn()-oldHit.getColumn(),newUpper.getColumn()+oldHit.getRow()-refer.getRow());
+        }
+      }
+      else if(oldOri=='R'){
+        if(newOri=='D') {
+          Coordinate refer = new Coordinate(oldUpper.getRow()+1,oldUpper.getColumn());
+          newCoordinate = new Coordinate(newUpper.getRow()+oldHit.getColumn()-refer.getColumn(),newUpper.getColumn()+refer.getRow()-oldHit.getRow());
+        }
+        else if( newOri=='L') {
+          Coordinate refer = new Coordinate(oldUpper.getRow()+1,oldUpper.getColumn()+4);
+          newCoordinate = new Coordinate(newUpper.getRow()+refer.getRow()-oldHit.getRow(),newUpper.getColumn()+refer.getColumn()-oldHit.getColumn());
+        }
+        else{
+          Coordinate refer = new Coordinate(oldUpper.getRow(),oldUpper.getColumn()+4);
+          newCoordinate = new Coordinate(newUpper.getRow()+refer.getColumn()-oldHit.getColumn(),newUpper.getColumn()+oldHit.getRow()-refer.getRow());
+        }
+      }
+      else if(oldOri=='D') {
+        if(newOri=='L') {
+          Coordinate refer = new Coordinate(oldUpper.getRow()+4,oldUpper.getColumn());
+          newCoordinate = new Coordinate(newUpper.getRow()+oldHit.getColumn()-refer.getColumn(),newUpper.getColumn()+refer.getRow()-oldHit.getRow());
+        }
+        else if(newOri=='U') {
+          Coordinate refer = new Coordinate(oldUpper.getRow()+4,oldUpper.getColumn()+1);
+          newCoordinate = new Coordinate(newUpper.getRow()+refer.getRow()-oldHit.getRow(),newUpper.getColumn()+refer.getColumn()-oldHit.getColumn());
+        }
+        else {
+          Coordinate refer = new Coordinate(oldUpper.getRow(),oldUpper.getColumn()+1);
+          newCoordinate = new Coordinate(newUpper.getRow()+refer.getColumn()-oldHit.getColumn(),newUpper.getColumn()+oldHit.getRow()-refer.getRow());
+        }
+      }
+      else {
+        if(newOri=='U') {
+          Coordinate refer = new Coordinate(oldUpper.getRow()+1,oldUpper.getColumn());
+          newCoordinate = new Coordinate(newUpper.getRow()+oldHit.getColumn()-refer.getColumn(),newUpper.getColumn()+refer.getRow()-oldHit.getRow());
+        }
+        else if(newOri=='R') {
+          Coordinate refer = new Coordinate(oldUpper.getRow()+1,oldUpper.getColumn()+4);
+          newCoordinate = new Coordinate(newUpper.getRow()+refer.getRow()-oldHit.getRow(),newUpper.getColumn()+refer.getColumn()-oldHit.getColumn());
+        }
+        else /*(oldOri=='L' && newOri=='D') */{
+          Coordinate refer = new Coordinate(oldUpper.getRow(),oldUpper.getColumn()+4);
+          newCoordinate = new Coordinate(newUpper.getRow()+refer.getColumn()-oldHit.getColumn(),newUpper.getColumn()+oldHit.getRow()-refer.getRow());
+        }
+      }
+    }
+    hitInNewShip.add(newCoordinate);
+    return newCoordinate;
   }
   
   /**
